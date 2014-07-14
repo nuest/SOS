@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.n52.sensorweb.sos</groupId>
+    <artifactId>hibernate-datasource</artifactId>
+    <version>4.0.1</version>
+  </parent>
+  <groupId>org.n52.sensorweb.sos</groupId>
+  <artifactId>hibernate-datasource-rasdaman</artifactId>
+  <version>4.0.0</version>
+  <name>52°North SOS - Hibernate Rasdaman Datasource</name>
+  <description>52°North Sensor Observation Service Hibernate Rasdaman module</description>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.asqldb</groupId>
+  		<artifactId>asqldb</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.rasdaman</groupId>
+  		<artifactId>rasj</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  </dependencies>
+</project>
