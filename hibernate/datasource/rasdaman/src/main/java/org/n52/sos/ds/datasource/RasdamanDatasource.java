@@ -42,12 +42,9 @@ import java.util.regex.Pattern;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Table;
-import org.hibernate.spatial.dialect.mysql.MySQLSpatial5InnoDBDialect;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.n52.sos.ds.hibernate.util.HibernateConstants;
 import org.n52.sos.exception.ConfigurationException;
-
-import com.google.common.base.Joiner;
 
 /**
  * Hibernate datasource implementation for Rasdaman databases.
@@ -192,6 +189,4 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
     @Override
     protected void validatePrerequisites(Connection arg0, DatabaseMetadata arg1, Map<String, Object> arg2) {
     }
-    
-
 }

@@ -56,9 +56,9 @@
         <!-- Logger configuration -->
         <config.logger.fileappender.filepath>${catalina.base}/logs</config.logger.fileappender.filepath>
         <config.logger.fileappender.filename>${conf.sos.name}</config.logger.fileappender.filename>
-        <config.logger.level>INFO</config.logger.level>
-        <config.logger.level.test.n52>ERROR</config.logger.level.test.n52>
-        <config.logger.level.test.global>ERROR</config.logger.level.test.global>
+        <config.logger.level>DEBUG</config.logger.level>
+        <config.logger.level.test.n52>DEBUG</config.logger.level.test.n52>
+        <config.logger.level.test.global>DEBUG</config.logger.level.test.global>
         <config.logger.history.max>30</config.logger.history.max>
         <config.logger.maxFileSize>10MB</config.logger.maxFileSize>
 
@@ -219,6 +219,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>hibernate-datasource-mysql</artifactId>
+                <version>${sos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>hibernate-datasource-rasdaman</artifactId>
                 <version>${sos.version}</version>
             </dependency>
             <dependency>
