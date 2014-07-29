@@ -99,6 +99,8 @@ public class InstallFinishController extends AbstractProcessingInstallationContr
                 datasource.execute(dropSchema, c.getDatabaseSettings());
             }
             if (c.isCreateSchema()) {
+            	System.out.println(datasource == null ? "datasource null" : "nenull");
+            	System.out.println(datasource.getDialectName());
                 String[] createSchema = datasource.createSchema(c.getDatabaseSettings());
                 datasource.execute(createSchema, c.getDatabaseSettings());
             }

@@ -60,17 +60,17 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
     
     protected static final String ASQL_DRIVER_CLASS = "org.hsqldb.jdbc.JDBCDriver";
 
-    protected static final Pattern JDBC_URL_PATTERN = Pattern.compile("^jdbc:hsqldb://([^:]+):([0-9]+)/(.*)$");
+    protected static final Pattern JDBC_URL_PATTERN = Pattern.compile("^jdbc:hsqldb:([:/a-zA-Z0-9]*)");
 
     protected static final String USERNAME_DESCRIPTION =
             "Your database server user name. The default value for ASQLDB is \"SA\".";
 
-    protected static final String USERNAME_DEFAULT_VALUE = "SA";
+    protected static final String USERNAME_DEFAULT_VALUE = "SIMONA";
 
     protected static final String PASSWORD_DESCRIPTION =
             "Your database server password. The default value is \"\".";
 
-    protected static final String PASSWORD_DEFAULT_VALUE = "";
+    protected static final String PASSWORD_DEFAULT_VALUE = "SIMONA";
 
     protected static final String HOST_DESCRIPTION =
             "Set this to the IP/net location of ASQLDB database server. The default value for ASQLDB is \"localhost\".";
@@ -80,7 +80,7 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
 
     protected static final int PORT_DEFAULT_VALUE = 3306;
 
-    protected static final String SCHEMA_DEFAULT_VALUE = "sos";
+    protected static final String SCHEMA_DEFAULT_VALUE = "public";
 
     /**
      * constructor, sets default values
@@ -102,6 +102,7 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
 
     @Override
     public boolean checkSchemaCreation(Map<String, Object> arg0) {
+    	// TODO implement check schema creation
         return false;
     }
 
@@ -148,13 +149,15 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
     protected String[] parseURL(String url) {
         Matcher matcher = JDBC_URL_PATTERN.matcher(url);
         matcher.find();
-        return new String[] { matcher.group(1), matcher.group(2), matcher.group(3) };
+        System.out.println(matcher.group(0));
+        System.out.println(matcher.group(1));
+        return new String[] { matcher.group(0), matcher.group(1) };
     }
 
     @Override
     protected String toURL(Map<String, Object> settings) {
         String url =
-                String.format("jdbc:hsqldb:file:%s", settings.get(DATABASE_KEY));
+                String.format("jdbc:hsqldb:file:/var/hsqldb/%s", settings.get(DATABASE_KEY));
         return url;
     }
 
@@ -175,15 +178,36 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
 
     @Override
     protected Connection openConnection(Map<String, Object> settings) throws SQLException {
-        try {
+/*        try {
             String jdbc = toURL(settings);
             Class.forName(getDriverClass());
             String pass = (String) settings.get(HibernateConstants.CONNECTION_PASSWORD);
             String user = (String) settings.get(HibernateConstants.CONNECTION_USERNAME);
+            pass = "SIMONA";
+            user = "SIMONA";
             return DriverManager.getConnection(jdbc, user, pass);
         } catch (ClassNotFoundException ex) {
             throw new SQLException(ex);
+        }*/
+        Connection conn;
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", "SIMONA");
+        connectionProps.put("password", "SIMONA");
+
+        try {
+            Class.forName("org.hsqldb.jdbc.JDBCDriver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Could not load the hsqldb JDBCDriver", e);
         }
+
+        final String jdbcUrl = "jdbc:hsqldb:file:" + "/var/hsqldb/db";
+        //String jdbcUrl = toURL(settings);
+        conn = DriverManager.getConnection(
+                jdbcUrl,
+                connectionProps
+                );
+        System.out.println("Connected to database: "+jdbcUrl);
+        return conn;
     }
 
     @Override
