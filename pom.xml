@@ -232,6 +232,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>hibernate-datasource-rasdaman</artifactId>
+                <version>${sos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>binding-kvp</artifactId>
                 <version>${sos.version}</version>
             </dependency>
