@@ -34,13 +34,18 @@ import org.hibernate.cfg.Configuration;
 import org.n52.sos.ds.hibernate.SessionFactoryProvider;
 import org.n52.sos.exception.ConfigurationException;
 import org.n52.sos.hibernate.usertype.HibernateGeometryType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RasdamanSessionFactoryProvider extends SessionFactoryProvider {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionFactoryProvider.class);
+	
 	public RasdamanSessionFactoryProvider() {
 		super();
+		LOGGER.debug("NEW {}", this);
 	};
 	
 	@Override

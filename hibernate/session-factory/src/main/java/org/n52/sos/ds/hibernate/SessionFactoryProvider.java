@@ -67,7 +67,7 @@ public class SessionFactoryProvider extends UnspecifiedSessionFactoryProvider {
      * constructor. Opens a new Hibernate SessionFactory
      */
     public SessionFactoryProvider() {
-
+    	//
     }
 
     public String getUpdateScript() throws ConnectionProviderException, SQLException {

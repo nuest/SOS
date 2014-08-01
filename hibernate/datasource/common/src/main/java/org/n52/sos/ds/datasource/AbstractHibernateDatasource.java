@@ -600,7 +600,10 @@ public abstract class AbstractHibernateDatasource extends AbstractHibernateCoreD
             validatePrerequisites(conn, metadata, settings);
         } catch (SQLException ex) {
             throw new ConfigurationException(ex);
-        } finally {
+        } catch (HibernateException ex) {
+        	throw new ConfigurationException(ex);
+        }
+        finally {
             close(conn);
         }
     }

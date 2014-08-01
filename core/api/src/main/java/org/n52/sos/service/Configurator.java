@@ -582,6 +582,7 @@ public class Configurator implements Cleanupable {
         featureConnectionProvider =
                 ConfiguringSingletonServiceLoader.<ConnectionProvider> loadAndConfigure(
                         IFeatureConnectionProvider.class, false, getConnectionProviderIdentificator());
+        
         dataConnectionProvider.initialize(dataConnectionProviderProperties);
         if (featureConnectionProvider != null) {
             featureConnectionProvider
@@ -590,6 +591,8 @@ public class Configurator implements Cleanupable {
         } else {
             featureConnectionProvider = dataConnectionProvider;
         }
+        
+        LOGGER.debug("Loaded and initialized connection providers: \n\t\tData: {}\n\t\tFeature: {}", dataConnectionProvider, featureConnectionProvider);
     }
 
     /**
