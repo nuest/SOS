@@ -53,12 +53,11 @@ import junit.framework.TestCase;
 public class RasdamanDatasourceTest extends TestCase {
 	private static final String SOS_TEST_CONF = "SOS_TEST_CONF";
 	private static final String RASDAMAN_SCHEMA = "public";
-	private static final String RASDAMAN_USER = "simona";
-	private static final String RASDAMAN_PASS = "simona";
-//	private static final String RASDAMAN_USER_NO_RIGHTS = "SA";
-//	private static final String RASDAMAN_PASS_NO_RIGHTS = "";
+	private static final String RASDAMAN_USER = "SA";
+	private static final String RASDAMAN_PASS = "";
+	private static final String DATABASE_DEFAULT_VALUE = "jdbc:hsqldb:file:/var/hsqldb/db";
 
-	private static String host, user, pass, schema, userNoRights, passNoRights;
+	private static String host, user, pass, schema, database;
 	private static int port;
 
 	static {
@@ -71,8 +70,7 @@ public class RasdamanDatasourceTest extends TestCase {
 		schema = RASDAMAN_SCHEMA;
 		user = RASDAMAN_USER;
 		pass = RASDAMAN_PASS;
-//		userNoRights = props.getProperty(RASDAMAN_USER_NO_RIGHTS);
-//		passNoRights = props.getProperty(RASDAMAN_PASS_NO_RIGHTS);
+		database = DATABASE_DEFAULT_VALUE;
 	}
 
 	private RasdamanDatasource ds;
@@ -84,12 +82,6 @@ public class RasdamanDatasourceTest extends TestCase {
 		Map<String, Object> settings = getDefaultSettings();
 		conn = ds.openConnection(settings);
 		stmt = conn.createStatement();
-
-//		settings = getDefaultSettings();
-//		settings.put(AbstractHibernateDatasource.USERNAME_KEY, userNoRights);
-//		settings.put(AbstractHibernateDatasource.PASSWORD_KEY, passNoRights);
-//		connNoRights = ds.openConnection(settings);
-//		stmtNoRights = connNoRights.createStatement();
 	}
 
 	@Override
@@ -149,9 +141,9 @@ public class RasdamanDatasourceTest extends TestCase {
 
 	public void testToURL() throws Exception {
 		Map<String, Object> settings = new HashMap<String, Object>();
-		settings.put(AbstractHibernateDatasource.USERNAME_KEY, "sa");
+		settings.put(AbstractHibernateDatasource.USERNAME_KEY, "SA");
 		settings.put(AbstractHibernateDatasource.PASSWORD_KEY, "");
-		settings.put(AbstractHibernateDatasource.DATABASE_KEY, "db");
+		settings.put(AbstractHibernateDatasource.DATABASE_KEY, "jdbc:hsqldb:file:/var/hsqldb/db");
 		settings.put(AbstractHibernateDatasource.SCHEMA_KEY, "public");
 
 		assertEquals("jdbc:hsqldb:file:/var/hsqldb/db", ds.toURL(settings));
@@ -167,12 +159,11 @@ public class RasdamanDatasourceTest extends TestCase {
 
 	private static Map<String, Object> getDefaultSettings() {
 		Map<String, Object> settings = new HashMap<String, Object>();
-		settings.put(AbstractHibernateDatasource.HOST_KEY, host);
-		settings.put(AbstractHibernateDatasource.PORT_KEY, port);
 		settings.put(AbstractHibernateDatasource.USERNAME_KEY, user);
 		settings.put(AbstractHibernateDatasource.PASSWORD_KEY, pass);
 		settings.put(AbstractHibernateDatasource.SCHEMA_KEY, schema);
 		settings.put(AbstractHibernateDatasource.TRANSACTIONAL_KEY, true);
+		settings.put(AbstractHibernateDatasource.DATABASE_KEY, database);
 		return settings;
 	}
 }

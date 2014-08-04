@@ -37,14 +37,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Table;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
+import org.n52.sos.config.SettingDefinition;
 import org.n52.sos.ds.hibernate.util.HibernateConstants;
 import org.n52.sos.exception.ConfigurationException;
+import org.n52.sos.hibernate.usertype.HibernateGeometryType;
+
+import com.google.common.collect.Sets;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Hibernate datasource implementation for Rasdaman databases.
@@ -58,7 +64,7 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
     
     private static final String DIALECT_NAME = "Rasdaman";
     
-    protected static final String ASQL_DRIVER_CLASS = "org.hsqldb.jdbc.JDBCDriver";
+    protected static final String ASQLDB_DRIVER_CLASS = "org.hsqldb.jdbc.JDBCDriver";
 
     protected static final Pattern JDBC_URL_PATTERN = Pattern.compile("^jdbc:hsqldb:([:/a-zA-Z0-9]*)");
 
@@ -72,13 +78,10 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
 
     protected static final String PASSWORD_DEFAULT_VALUE = "SIMONA";
 
-    protected static final String HOST_DESCRIPTION =
-            "Set this to the IP/net location of ASQLDB database server. The default value for ASQLDB is \"localhost\".";
-
-    protected static final String PORT_DESCRIPTION =
-            "Set this to the port number of your PostgreSQL server. The default value for MySQL is 3306.";
-
-    protected static final int PORT_DEFAULT_VALUE = 3306;
+    protected static final String DATABASE_DESCRIPTION = 
+    		"Set this to the path of the ASQLDB database you want to use for SOS.";
+    
+    protected static final String DATABASE_DEFAULT_VALUE = "jdbc:hsqldb:file:/var/hsqldb/db";
 
     protected static final String SCHEMA_DEFAULT_VALUE = "public";
 
@@ -91,11 +94,7 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
         setPasswordDefault(PASSWORD_DEFAULT_VALUE);
         setPasswordDescription(PASSWORD_DESCRIPTION);
         setDatabaseDefault(DATABASE_DEFAULT_VALUE);
-        setDatabaseDescription(HOST_DESCRIPTION);
-//        setHostDefault(HOST_DEFAULT_VALUE);
-//        setHostDescription(HOST_DESCRIPTION);
-//        setPortDefault(PORT_DEFAULT_VALUE);
-//        setPortDescription(PORT_DESCRIPTION);
+        setDatabaseDescription(DATABASE_DESCRIPTION);
         setSchemaDefault(SCHEMA_DEFAULT_VALUE);
         setSchemaDescription(SCHEMA_DESCRIPTION);
     }
@@ -106,6 +105,13 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
         return false;
     }
 
+    @Override
+    public CustomConfiguration getConfig(java.util.Map<String,Object> settings) {
+    	CustomConfiguration cfg = super.getConfig(settings);
+    	cfg.registerTypeOverride(new HibernateGeometryType(), new String[] { "org.hibernate.spatial.GeometryType", Geometry.class.getName() });
+    	return cfg;
+    };
+    
     @Override
     public void clear(Properties properties) {
         Map<String, Object> settings = parseDatasourceProperties(properties);
@@ -139,6 +145,29 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
     public String getDialectName() {
         return DIALECT_NAME;
     }
+    
+    @Override
+    public Set<SettingDefinition<?, ?>> getSettingDefinitions() {
+    	Set<SettingDefinition<?, ?>> set = Sets.<SettingDefinition<?, ?>> newHashSet(
+                createUsernameDefinition(USERNAME_DEFAULT_VALUE),
+                createPasswordDefinition(PASSWORD_DEFAULT_VALUE),
+                createDatabaseDefinition(DATABASE_DEFAULT_VALUE),
+                createMinPoolSizeDefinition(MIN_POOL_SIZE_DEFAULT_VALUE),
+                createMaxPoolSizeDefinition(MAX_POOL_SIZE_DEFAULT_VALUE),
+                createSchemaDefinition(SCHEMA_DEFAULT_VALUE),
+                createBatchSizeDefinition(BATCH_SIZE_DEFAULT_VALUE),
+                createProvidedJdbcDriverDefinition(PROVIDED_JDBC_DRIVER_DEFAULT_VALUE),
+                getOldConceptDefiniton());
+                
+        if (isTransactionalDatasource()) {
+            set.add(getTransactionalDefiniton());
+        }
+        
+        if (isSpatialFilteringProfileDatasource()) {
+            set.add(getSpatialFilteringProfileDefiniton());
+        }
+        return set;
+    }
 
     @Override
     public boolean supportsClear() {
@@ -156,8 +185,8 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
 
     @Override
     protected String toURL(Map<String, Object> settings) {
-        String url =
-                String.format("jdbc:hsqldb:file:/var/hsqldb/%s", settings.get(DATABASE_KEY));
+//        String url = String.format("jdbc:hsqldb:file:/var/hsqldb/%s", settings.get(DATABASE_KEY));
+    	String url = (String) settings.get(DATABASE_KEY);
         return url;
     }
 
@@ -173,7 +202,7 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
 
     @Override
     protected String getDriverClass() {
-        return ASQL_DRIVER_CLASS;
+        return ASQLDB_DRIVER_CLASS;
     }
 
     @Override
@@ -191,17 +220,22 @@ public class RasdamanDatasource extends AbstractHibernateFullDBDatasource {
         }*/
         Connection conn;
         Properties connectionProps = new Properties();
-        connectionProps.put("user", "SIMONA");
-        connectionProps.put("password", "SIMONA");
+       
+        String pass = (String) settings.get(HibernateConstants.CONNECTION_PASSWORD);
+        String user = (String) settings.get(HibernateConstants.CONNECTION_USERNAME);
+        
+        connectionProps.put("user", user);
+        connectionProps.put("password", pass);
 
         try {
-            Class.forName("org.hsqldb.jdbc.JDBCDriver");
+//            Class.forName("org.hsqldb.jdbc.JDBCDriver");
+        	Class.forName(getDriverClass());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not load the hsqldb JDBCDriver", e);
+            throw new RuntimeException("Could not load the ASQLDB's JDBCDriver", e);
         }
 
-        final String jdbcUrl = "jdbc:hsqldb:file:" + "/var/hsqldb/db";
-        //String jdbcUrl = toURL(settings);
+//        final String jdbcUrl = "jdbc:hsqldb:file:" + "/var/hsqldb/db";
+        String jdbcUrl = toURL(settings);
         conn = DriverManager.getConnection(
                 jdbcUrl,
                 connectionProps

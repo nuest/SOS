@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RasdamanSessionFactoryProvider extends SessionFactoryProvider {
-	
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionFactoryProvider.class);
 	
 	public RasdamanSessionFactoryProvider() {
