@@ -471,6 +471,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>split-and-merge</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>${project.groupId}</groupId>
+        	<artifactId>statistics</artifactId>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

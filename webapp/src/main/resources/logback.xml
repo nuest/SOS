@@ -42,7 +42,7 @@
 	<logger name="org.n52" level="${config.logger.level}" />
 	<logger name="org.springframework" level="WARN" />
 
-	<root level="INFO">
+	<root level="DEBUG">
 		<appender-ref ref="FILE" />
 	</root>
 </configuration>

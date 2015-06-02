@@ -32,6 +32,7 @@
         <module>operations</module>
         <module>hibernate</module>
         <module>extensions</module>
+        <module>statistics</module>
         <module>spring</module>
         <module>third-party</module>
         <module>webapp</module>
@@ -86,6 +87,13 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+        	<!-- STATISTICS -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statistics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>api</artifactId>
