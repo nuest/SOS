@@ -38,6 +38,7 @@ import org.joda.time.DateTimeZone;
 import org.n52.sos.request.AbstractServiceRequest;
 import org.n52.sos.statistics.api.StatisticsDataMapping;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLocationUtil;
+import org.n52.sos.statistics.impl.StatisticsLocationUtil;
 import org.n52.sos.util.net.IPAddress;
 
 public abstract class AbstractSosRequestResolver<T extends AbstractServiceRequest<?>> implements IRequestResolver {
@@ -46,8 +47,9 @@ public abstract class AbstractSosRequestResolver<T extends AbstractServiceReques
 
     protected T request;
 
+    // FIXME remove new object in DI environment
     @Inject
-    protected IStatisticsLocationUtil locationUtil;
+    protected IStatisticsLocationUtil locationUtil = new StatisticsLocationUtil();
 
     protected AbstractSosRequestResolver() {
         dataMap = new HashMap<>();

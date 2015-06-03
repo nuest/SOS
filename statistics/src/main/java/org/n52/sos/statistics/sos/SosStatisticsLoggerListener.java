@@ -40,6 +40,7 @@ import org.n52.sos.event.events.RequestEvent;
 import org.n52.sos.request.AbstractServiceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -54,7 +55,10 @@ public class SosStatisticsLoggerListener implements SosEventListener {
     private static final Set<Class<? extends SosEvent>> EVENT_TYPES = ImmutableSet.<Class<? extends SosEvent>> of(RequestEvent.class);
 
     @Inject
-    private SosRequestLoggingResolver resolver;
+    // FIXME remove new object in DI environment
+    private SosRequestLoggingResolver resolver = new SosRequestLoggingResolver();;
+
+    private ApplicationContext appCtx;
 
     public SosStatisticsLoggerListener() {
         executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
@@ -69,13 +73,19 @@ public class SosStatisticsLoggerListener implements SosEventListener {
     @Override
     public void handle(SosEvent sosEvent)
     {
+        logger.debug("Event received: {}", sosEvent);
         try {
-            AbstractServiceRequest<?> request = ((RequestEvent) sosEvent).getRequest();
-            resolver.setRequest(request);
-            // resolver.run();
-            executorService.execute(resolver);
+            if (sosEvent instanceof RequestEvent) {
+                AbstractServiceRequest<?> request = ((RequestEvent) sosEvent).getRequest();
+                resolver.setRequest(request);
+                // resolver.run();
+                executorService.execute(resolver);
+            } else {
+                logger.error("Wrong type of event", sosEvent.getClass());
+            }
         } catch (Throwable e) {
             logger.error("Can't run logging", e);
         }
     }
+
 }

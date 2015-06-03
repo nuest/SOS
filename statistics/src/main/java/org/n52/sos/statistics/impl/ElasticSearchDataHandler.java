@@ -56,8 +56,17 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
 
     private ElasticSearchSettings settings;
 
+    public ElasticSearchDataHandler() {
+        // TODO load it from config file
+        settings = new ElasticSearchSettings(true);
+        settings.setClusterName("embedded-cluster");
+        settings.setIndexId("myindex");
+        settings.setTypeId("mytype");
+        init(settings);
+    }
+
     @Override
-    public synchronized IndexResponse persist(Map<String, Object> dataMap,
+    public IndexResponse persist(Map<String, Object> dataMap,
             Class<?> clazz) throws Exception
     {
         if (client == null) {

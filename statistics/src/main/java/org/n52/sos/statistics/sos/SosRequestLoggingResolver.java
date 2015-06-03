@@ -50,27 +50,26 @@ public class SosRequestLoggingResolver implements IStatisticsLoggingResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticSearchDataHandler.class);
 
+    // FIXME remove new object in DI environment
     @Inject
-    private IStatisticsDataHandler dataHandler;
+    private IStatisticsDataHandler dataHandler = new ElasticSearchDataHandler();
 
     // ------------- Injected resolvers ----------------
+    // FIXME remove new object in DI environment
     @Inject
-    private GetCapabilitiesRequestResolver getCapabilitiesResolver;
+    private GetCapabilitiesRequestResolver getCapabilitiesResolver = new GetCapabilitiesRequestResolver();
 
+    // FIXME remove new object in DI environment
     @Inject
-    private GetObservationRequestResolver getObservationResolver;
+    private GetObservationRequestResolver getObservationResolver = new GetObservationRequestResolver();
 
+    // FIXME remove new object in DI environment
     @Inject
-    private DescribeSensorRequestResolver describeSensorResolver;
+    private DescribeSensorRequestResolver describeSensorResolver = new DescribeSensorRequestResolver();
 
     private AbstractServiceRequest<?> request;
 
-    public SosRequestLoggingResolver(AbstractServiceRequest<?> request) {
-        this.request = request;
-    }
-
     public SosRequestLoggingResolver() {
-        this(null);
     }
 
     @Override
