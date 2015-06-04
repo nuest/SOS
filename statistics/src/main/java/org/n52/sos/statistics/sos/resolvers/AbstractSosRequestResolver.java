@@ -29,21 +29,24 @@
 package org.n52.sos.statistics.sos.resolvers;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.joda.time.DateTimeZone;
 import org.n52.sos.request.AbstractServiceRequest;
-import org.n52.sos.statistics.api.StatisticsDataMapping;
+import org.n52.sos.statistics.api.AbstractElasticSearchDataHolder;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLocationUtil;
 import org.n52.sos.statistics.impl.StatisticsLocationUtil;
+import org.n52.sos.statistics.sos.SosDataMapping;
+import org.n52.sos.statistics.sos.resolvers.interfaces.IRequestResolver;
 import org.n52.sos.util.net.IPAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class AbstractSosRequestResolver<T extends AbstractServiceRequest<?>> implements IRequestResolver {
+public abstract class AbstractSosRequestResolver<T extends AbstractServiceRequest<?>> extends AbstractElasticSearchDataHolder implements IRequestResolver<T> {
 
-    protected final Map<String, Object> dataMap;
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractSosRequestResolver.class);
 
     protected T request;
 
@@ -51,34 +54,32 @@ public abstract class AbstractSosRequestResolver<T extends AbstractServiceReques
     @Inject
     protected IStatisticsLocationUtil locationUtil = new StatisticsLocationUtil();
 
-    protected AbstractSosRequestResolver() {
-        dataMap = new HashMap<>();
-    }
-
-    public AbstractSosRequestResolver<?> init(T request)
+    private AbstractSosRequestResolver<?> init()
     {
-        this.request = request;
+
         // Global constants
-        put(StatisticsDataMapping.TIMESTAMP_FIELD, Calendar.getInstance(DateTimeZone.UTC.toTimeZone()));
-        put(StatisticsDataMapping.SERVICE_FIELD, request.getOperationKey().getService());
-        put(StatisticsDataMapping.VERSION_FIELD, request.getOperationKey().getVersion());
-        put(StatisticsDataMapping.OPERATION_NAME_FIELD, request.getOperationKey().getOperation());
+        put(SosDataMapping.TIMESTAMP_FIELD, Calendar.getInstance(DateTimeZone.UTC.toTimeZone()));
+        put(SosDataMapping.SERVICE_FIELD, request.getOperationKey().getService());
+        put(SosDataMapping.VERSION_FIELD, request.getOperationKey().getVersion());
+        put(SosDataMapping.OPERATION_NAME_FIELD, request.getOperationKey().getOperation());
 
         // requestcontext
         IPAddress ip = locationUtil.resolveOriginalIpAddress(request.getRequestContext());
-        put(StatisticsDataMapping.IP_ADDRESS_FIELD, ip);
-        put(StatisticsDataMapping.SOURCE_GEOLOC_FIELD, locationUtil.ip2GeoPoint(ip));
-        put(StatisticsDataMapping.PROXIED_REQUEST_FIELD, request.getRequestContext().getForwardedForChain().isPresent());
+        put(SosDataMapping.IP_ADDRESS_FIELD, ip);
+        put(SosDataMapping.SOURCE_GEOLOC_FIELD, locationUtil.ip2GeoPoint(ip));
+        put(SosDataMapping.PROXIED_REQUEST_FIELD, request.getRequestContext().getForwardedForChain().isPresent());
         return this;
     }
 
-    public Map<String, Object> put(String key,
-            Object value)
+    @Override
+    public Map<String, Object> resolveAsMap(T request)
     {
-        if (key == null || value == null) {
-            return dataMap;
-        }
-        dataMap.put(key, value);
+        this.request = request;
+        init();
+        resolveConcreteRequest();
         return dataMap;
     }
+
+    protected abstract void resolveConcreteRequest();
+
 }

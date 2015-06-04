@@ -46,12 +46,19 @@ public abstract class ElasticSearchAwareTest extends SpringBaseTest {
     protected static boolean ROLLBACK = true;
 
     @Autowired
-    protected ElasticSearchSettings settings;
-
-    @Autowired
     protected ElasticSearchDataHandler handler;
 
     private static Node embeddedNode;
+
+    protected ElasticSearchSettings settings;
+
+    public ElasticSearchAwareTest() {
+
+        settings = new ElasticSearchSettings(true);
+        settings.setClusterName("embedded-cluster");
+        settings.setIndexId("myindex");
+        settings.setTypeId("mytype");
+    }
 
     @BeforeClass
     public static void init()
@@ -59,7 +66,7 @@ public abstract class ElasticSearchAwareTest extends SpringBaseTest {
         logger.debug("Starting embedded node");
         Settings settings = ImmutableSettings.settingsBuilder().loadFromClasspath("elasticsearch_embedded.yml").build();
         embeddedNode = NodeBuilder.nodeBuilder().settings(settings).build();
-        embeddedNode.start();
+        // embeddedNode.start();
         logger.debug("Started embedded node");
     }
 

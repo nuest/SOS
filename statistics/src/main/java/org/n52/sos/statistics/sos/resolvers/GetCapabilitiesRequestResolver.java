@@ -28,21 +28,20 @@
  */
 package org.n52.sos.statistics.sos.resolvers;
 
-import java.util.Map;
+import javax.inject.Named;
 
 import org.n52.sos.request.GetCapabilitiesRequest;
-import org.n52.sos.statistics.api.StatisticsDataMapping;
+import org.n52.sos.statistics.sos.SosDataMapping;
 
-public class GetCapabilitiesRequestResolver extends AbstractSosRequestResolver<GetCapabilitiesRequest> implements IRequestResolver {
-
-    public GetCapabilitiesRequestResolver() {
-    }
+@Named
+public class GetCapabilitiesRequestResolver extends AbstractSosRequestResolver<GetCapabilitiesRequest> {
 
     @Override
-    public Map<String, Object> resolveAsMap()
+    protected void resolveConcreteRequest()
     {
-        put(StatisticsDataMapping.GC_VERSIONS_FIELD, request.getAcceptVersions());
-        put(StatisticsDataMapping.GC_FORMATS_FIELD, request.getAcceptFormats());
-        return dataMap;
+        put(SosDataMapping.GC_VERSIONS_FIELD, request.getAcceptVersions());
+        put(SosDataMapping.GC_FORMATS_FIELD, request.getAcceptFormats());
+        put(SosDataMapping.GC_SECTIONS, request.getSections());
+        put(SosDataMapping.GC_UPDATE_SEQUENCE, request.getUpdateSequence());
     }
 }

@@ -57,12 +57,6 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
     private ElasticSearchSettings settings;
 
     public ElasticSearchDataHandler() {
-        // TODO load it from config file
-        settings = new ElasticSearchSettings(true);
-        settings.setClusterName("embedded-cluster");
-        settings.setIndexId("myindex");
-        settings.setTypeId("mytype");
-        init(settings);
     }
 
     @Override
@@ -106,6 +100,7 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
         return client;
     }
 
+    @Override
     public void init(ElasticSearchSettings settings)
     {
         this.settings = settings;

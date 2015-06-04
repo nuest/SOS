@@ -68,8 +68,8 @@ node.name: "Statistics Client"
 #    to act as a "search load balancer" (fetching data from nodes,
 #    aggregating results, etc.)
 #
-#node.master: false
-#node.data: false
+node.master: false
+node.data: false
 
 # Use the Cluster Health API [http://localhost:9200/_cluster/health], the
 # Node Info API [http://localhost:9200/_nodes] or GUI tools

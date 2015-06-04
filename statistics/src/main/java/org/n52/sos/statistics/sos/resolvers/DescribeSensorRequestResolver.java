@@ -28,32 +28,20 @@
  */
 package org.n52.sos.statistics.sos.resolvers;
 
-import java.util.Map;
+import javax.inject.Named;
 
-import org.joda.time.DateTimeZone;
-import org.n52.sos.ogc.gml.time.TimeInstant;
-import org.n52.sos.ogc.gml.time.TimePeriod;
 import org.n52.sos.request.DescribeSensorRequest;
-import org.n52.sos.statistics.api.StatisticsDataMapping;
+import org.n52.sos.statistics.sos.SosDataMapping;
+import org.n52.sos.statistics.sos.models.SosTimeJsonHolder;
 
+@Named
 public class DescribeSensorRequestResolver extends AbstractSosRequestResolver<DescribeSensorRequest> {
 
-    public DescribeSensorRequestResolver() {
-    }
-
     @Override
-    public Map<String, Object> resolveAsMap()
+    protected void resolveConcreteRequest()
     {
-        put(StatisticsDataMapping.DS_PROCEDURE, request.getProcedure());
-        put(StatisticsDataMapping.DS_PROCEDURE_DESC_FORMAT, request.getProcedureDescriptionFormat());
-
-        if (request.getValidTime() instanceof TimeInstant) {
-            TimeInstant ti = (TimeInstant) request.getValidTime();
-            put(StatisticsDataMapping.DS_VALID_TIME, ti.getValue().toDateTime(DateTimeZone.UTC));
-        } else if (request.getValidTime() instanceof TimePeriod) {
-            // TODO insert valid time before/after
-            throw new UnsupportedOperationException();
-        }
-        return dataMap;
+        put(SosDataMapping.DS_PROCEDURE, request.getProcedure());
+        put(SosDataMapping.DS_PROCEDURE_DESC_FORMAT, request.getProcedureDescriptionFormat());
+        put(SosDataMapping.DS_VALID_TIME, SosTimeJsonHolder.convert(request.getValidTime()).getAsMap());
     }
 }

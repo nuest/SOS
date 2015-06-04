@@ -28,22 +28,22 @@
  */
 package org.n52.sos.statistics.sos.resolvers;
 
-import java.util.Map;
+import javax.inject.Named;
 
 import org.n52.sos.request.GetObservationRequest;
-import org.n52.sos.statistics.api.StatisticsDataMapping;
+import org.n52.sos.statistics.sos.SosDataMapping;
 
-public class GetObservationRequestResolver extends AbstractSosRequestResolver<GetObservationRequest> implements IRequestResolver {
-
-    public GetObservationRequestResolver() {
-    }
+@Named
+public class GetObservationRequestResolver extends AbstractSosRequestResolver<GetObservationRequest> {
 
     @Override
-    public Map<String, Object> resolveAsMap()
+    protected void resolveConcreteRequest()
     {
-        put(StatisticsDataMapping.GO_PROCEDURES, request.getProcedures());
-        put(StatisticsDataMapping.GO_OFFERINGS, request.getOfferings());
-        put(StatisticsDataMapping.GO_OBSERVED_PROPERTIES, request.getObservedProperties());
-        return dataMap;
+        put(SosDataMapping.GO_PROCEDURES, request.getProcedures());
+        put(SosDataMapping.GO_OFFERINGS, request.getOfferings());
+        put(SosDataMapping.GO_OBSERVED_PROPERTIES, request.getObservedProperties());
+        // TODO implement spatial filter
+        // put(SosDataMapping.GO_SPATIAL_FILTER,request.getSpatialFilter());
+        // TODO implement temporalfilter
     }
 }

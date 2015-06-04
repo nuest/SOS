@@ -33,16 +33,40 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.n52.sos.gda.GetDataAvailabilityRequest;
 import org.n52.sos.request.AbstractServiceRequest;
+import org.n52.sos.request.DeleteSensorRequest;
 import org.n52.sos.request.DescribeSensorRequest;
 import org.n52.sos.request.GetCapabilitiesRequest;
+import org.n52.sos.request.GetFeatureOfInterestRequest;
+import org.n52.sos.request.GetObservationByIdRequest;
 import org.n52.sos.request.GetObservationRequest;
+import org.n52.sos.request.GetResultRequest;
+import org.n52.sos.request.GetResultTemplateRequest;
+import org.n52.sos.request.InsertObservationRequest;
+import org.n52.sos.request.InsertResultRequest;
+import org.n52.sos.request.InsertResultTemplateRequest;
+import org.n52.sos.request.InsertSensorRequest;
+import org.n52.sos.request.UpdateSensorRequest;
+import org.n52.sos.statistics.api.ElasticSearchSettings;
+import org.n52.sos.statistics.api.interfaces.IAdminDataHandler;
 import org.n52.sos.statistics.api.interfaces.IStatisticsDataHandler;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLoggingResolver;
 import org.n52.sos.statistics.impl.ElasticSearchDataHandler;
+import org.n52.sos.statistics.sos.resolvers.DeleteSensorRequestResolver;
 import org.n52.sos.statistics.sos.resolvers.DescribeSensorRequestResolver;
 import org.n52.sos.statistics.sos.resolvers.GetCapabilitiesRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.GetDataAvailabilityRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.GetFeatureOfInterestRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.GetObservationByIdRequestResolver;
 import org.n52.sos.statistics.sos.resolvers.GetObservationRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.GetResultRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.GetResultTemplateRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.InsertObservationRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.InsertResultRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.InsertResultTemplateRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.InsertSensorRequestResolver;
+import org.n52.sos.statistics.sos.resolvers.UpdateSensorRequestResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,15 +85,65 @@ public class SosRequestLoggingResolver implements IStatisticsLoggingResolver {
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetObservationRequestResolver getObservationResolver = new GetObservationRequestResolver();
+    private GetObservationRequestResolver getObservationRequestResolver = new GetObservationRequestResolver();
 
     // FIXME remove new object in DI environment
     @Inject
     private DescribeSensorRequestResolver describeSensorResolver = new DescribeSensorRequestResolver();
 
+    // FIXME remove new object in DI environment
+    @Inject
+    private DeleteSensorRequestResolver deleteSensorRequestResolver = new DeleteSensorRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private GetDataAvailabilityRequestResolver getDataAvailabilityRequestResolver = new GetDataAvailabilityRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private GetFeatureOfInterestRequestResolver getFeatureOfInterestRequestResolver = new GetFeatureOfInterestRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private GetObservationByIdRequestResolver getObservationByIdRequestResolver = new GetObservationByIdRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private GetResultRequestResolver getResultRequestResolver = new GetResultRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private GetResultTemplateRequestResolver getResultTemplateRequestResolver = new GetResultTemplateRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private InsertObservationRequestResolver insertObservationRequestResolver = new InsertObservationRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private InsertResultRequestResolver insertResultRequestResolver = new InsertResultRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private InsertResultTemplateRequestResolver insertResultTemplateRequestResolver = new InsertResultTemplateRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private InsertSensorRequestResolver insertSensorRequestResolver = new InsertSensorRequestResolver();
+
+    // FIXME remove new object in DI environment
+    @Inject
+    private UpdateSensorRequestResolver updateSensorRequestResolver = new UpdateSensorRequestResolver();
+
     private AbstractServiceRequest<?> request;
 
     public SosRequestLoggingResolver() {
+        // TODO remove if ES settings read with API
+        ElasticSearchSettings settings = new ElasticSearchSettings(true);
+        settings.setClusterName("embedded-cluster");
+        settings.setIndexId("myindex");
+        settings.setTypeId("mytype");
+        ((IAdminDataHandler) dataHandler).init(settings);
     }
 
     @Override
@@ -82,15 +156,48 @@ public class SosRequestLoggingResolver implements IStatisticsLoggingResolver {
     private void resolve(AbstractServiceRequest<?> request)
     {
         Map<String, Object> dataMap = null;
-        if (request instanceof GetCapabilitiesRequest) {
-            // GetCapabilities
-            dataMap = getCapabilitiesResolver.init((GetCapabilitiesRequest) request).resolveAsMap();
+        if (request instanceof DeleteSensorRequest) {
+            // DeleteSensorRequest
+            dataMap = deleteSensorRequestResolver.resolveAsMap((DeleteSensorRequest) request);
         } else if (request instanceof DescribeSensorRequest) {
             // DescribeSensor
-            dataMap = describeSensorResolver.init((DescribeSensorRequest) request).resolveAsMap();
+            dataMap = describeSensorResolver.resolveAsMap((DescribeSensorRequest) request);
+        } else if (request instanceof GetCapabilitiesRequest) {
+            // GetCapabilities
+            dataMap = getCapabilitiesResolver.resolveAsMap((GetCapabilitiesRequest) request);
+        } else if (request instanceof GetDataAvailabilityRequest) {
+            // GetDataAvailabilityRequest
+            dataMap = getDataAvailabilityRequestResolver.resolveAsMap((GetDataAvailabilityRequest) request);
+        } else if (request instanceof GetFeatureOfInterestRequest) {
+            // GetFeatureOfInterestRequest
+            dataMap = getFeatureOfInterestRequestResolver.resolveAsMap((GetFeatureOfInterestRequest) request);
+        } else if (request instanceof GetObservationByIdRequest) {
+            // GetObservationByIdRequest
+            dataMap = getObservationByIdRequestResolver.resolveAsMap((GetObservationByIdRequest) request);
         } else if (request instanceof GetObservationRequest) {
-            // GetObservation
-            dataMap = getObservationResolver.init((GetObservationRequest) request).resolveAsMap();
+            // GetObservationRequest
+            dataMap = getObservationRequestResolver.resolveAsMap((GetObservationRequest) request);
+        } else if (request instanceof GetResultRequest) {
+            // GetResultRequest
+            dataMap = getResultRequestResolver.resolveAsMap((GetResultRequest) request);
+        } else if (request instanceof GetResultTemplateRequest) {
+            // GetResultTemplateRequest
+            dataMap = getResultTemplateRequestResolver.resolveAsMap((GetResultTemplateRequest) request);
+        } else if (request instanceof InsertObservationRequest) {
+            // InsertObservationRequest
+            dataMap = insertObservationRequestResolver.resolveAsMap((InsertObservationRequest) request);
+        } else if (request instanceof InsertResultRequest) {
+            // InsertResultRequest
+            dataMap = insertResultRequestResolver.resolveAsMap((InsertResultRequest) request);
+        } else if (request instanceof InsertResultTemplateRequest) {
+            // InsertResultTemplateRequest
+            dataMap = insertResultTemplateRequestResolver.resolveAsMap((InsertResultTemplateRequest) request);
+        } else if (request instanceof InsertSensorRequest) {
+            // InsertSensorRequest
+            dataMap = insertSensorRequestResolver.resolveAsMap((InsertSensorRequest) request);
+        } else if (request instanceof UpdateSensorRequest) {
+            // UpdateSensorRequest
+            dataMap = updateSensorRequestResolver.resolveAsMap((UpdateSensorRequest) request);
         } else {
             logger.error("No mapping found for the request {}", request.getClass().getName());
             return;

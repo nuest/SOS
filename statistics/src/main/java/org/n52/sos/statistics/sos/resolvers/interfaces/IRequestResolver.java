@@ -26,10 +26,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.resolvers.interfaces;
 
 import java.util.Map;
 
-public interface IRequestResolver {
-    public Map<String, Object> resolveAsMap();
+public interface IRequestResolver<T> {
+    public Map<String, Object> resolveAsMap(T request);
 }

@@ -10,6 +10,7 @@
 
 	<context:component-scan base-package="org.n52.sos.statistics">
 		<context:include-filter type="annotation" expression="javax.inject.Singleton" />
+				<context:include-filter type="annotation" expression="javax.inject.Named" />
 	</context:component-scan>
 
 	<bean id="sosRequestResolver" class="org.n52.sos.statistics.sos.SosRequestLoggingResolver"
@@ -19,11 +20,13 @@
 		scope="singleton"></bean>
 
 	<!-- Resolvers -->
-	<bean id="describeSensorResolver"
-		class="org.n52.sos.statistics.sos.resolvers.DescribeSensorRequestResolver" scope="prototype"></bean>
-	<bean id="getCapabilitiesResolver"
-		class="org.n52.sos.statistics.sos.resolvers.GetCapabilitiesRequestResolver" scope="prototype"></bean>
-	<bean id="getObservationResolver"
-		class="org.n52.sos.statistics.sos.resolvers.GetObservationRequestResolver" scope="prototype"></bean>
+<!-- 	<bean id="deleteSensorRequest" class="org.n52.sos.statistics.sos.resolvers.DeleteSensorRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="describeSensorResolver" class="org.n52.sos.statistics.sos.resolvers.DescribeSensorRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="getCapabilitiesResolver" class="org.n52.sos.statistics.sos.resolvers.GetCapabilitiesRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="getDataAvailabilityResolver" class="org.n52.sos.statistics.sos.resolvers.GetDataAvailabilityRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="getFeatureOfInterestResolver" class="org.n52.sos.statistics.sos.resolvers.GetFeatureOfInterestRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="getObservationByIdResolver" class="org.n52.sos.statistics.sos.resolvers.GetObservationByIdRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="getObservationResolver" class="org.n52.sos.statistics.sos.resolvers.GetObservationRequestResolver" scope="prototype"></bean> -->
+<!-- 	<bean id="getResultResolver" class="org.n52.sos.statistics.sos.resolvers.GetResultRequestResolver" scope="prototype"></bean> -->
 
 </beans>

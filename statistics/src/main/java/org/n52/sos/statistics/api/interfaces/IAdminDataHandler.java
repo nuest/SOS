@@ -29,6 +29,7 @@
 package org.n52.sos.statistics.api.interfaces;
 
 import org.elasticsearch.client.Client;
+import org.n52.sos.statistics.api.ElasticSearchSettings;
 
 public interface IAdminDataHandler {
 
@@ -37,4 +38,6 @@ public interface IAdminDataHandler {
     public void createSchema();
 
     public Client getClient();
+
+    void init(ElasticSearchSettings settings);
 }
