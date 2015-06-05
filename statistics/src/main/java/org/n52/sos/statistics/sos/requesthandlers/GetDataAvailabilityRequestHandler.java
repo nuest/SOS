@@ -1,4 +1,4 @@
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers;
 
 import javax.inject.Named;
 
@@ -6,7 +6,7 @@ import org.n52.sos.gda.GetDataAvailabilityRequest;
 import org.n52.sos.statistics.sos.SosDataMapping;
 
 @Named
-public class GetDataAvailabilityRequestResolver extends AbstractSosRequestResolver<GetDataAvailabilityRequest> {
+public class GetDataAvailabilityRequestHandler extends AbstractSosRequestHandler<GetDataAvailabilityRequest> {
 
     @Override
     protected void resolveConcreteRequest()

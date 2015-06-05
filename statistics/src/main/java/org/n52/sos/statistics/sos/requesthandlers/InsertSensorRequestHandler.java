@@ -1,4 +1,4 @@
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers;
 
 import javax.inject.Named;
 
@@ -6,7 +6,7 @@ import org.n52.sos.request.InsertSensorRequest;
 import org.n52.sos.statistics.sos.SosDataMapping;
 
 @Named
-public class InsertSensorRequestResolver extends AbstractSosRequestResolver<InsertSensorRequest> {
+public class InsertSensorRequestHandler extends AbstractSosRequestHandler<InsertSensorRequest> {
 
     @Override
     protected void resolveConcreteRequest()

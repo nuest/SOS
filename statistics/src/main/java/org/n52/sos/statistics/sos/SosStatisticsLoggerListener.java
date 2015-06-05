@@ -32,10 +32,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.inject.Inject;
-
 import org.n52.sos.event.SosEvent;
 import org.n52.sos.event.SosEventListener;
+import org.n52.sos.event.events.ExceptionEvent;
 import org.n52.sos.event.events.RequestEvent;
 import org.n52.sos.request.AbstractServiceRequest;
 import org.slf4j.Logger;
@@ -51,11 +50,7 @@ public class SosStatisticsLoggerListener implements SosEventListener {
 
     private final ExecutorService executorService;
 
-    private static final Set<Class<? extends SosEvent>> EVENT_TYPES = ImmutableSet.<Class<? extends SosEvent>> of(RequestEvent.class);
-
-    @Inject
-    // FIXME remove new object in DI environment
-    private SosRequestLoggingResolver resolver = new SosRequestLoggingResolver();;
+    private static final Set<Class<? extends SosEvent>> EVENT_TYPES = ImmutableSet.<Class<? extends SosEvent>> of(RequestEvent.class, ExceptionEvent.class);
 
     public SosStatisticsLoggerListener() {
         executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
@@ -73,10 +68,16 @@ public class SosStatisticsLoggerListener implements SosEventListener {
         logger.debug("Event received: {}", sosEvent);
         try {
             if (sosEvent instanceof RequestEvent) {
+                // TODO should be injecting a new instance from spring container
+                // through a factory
+                SosRequestLoggingResolver resolver = new SosRequestLoggingResolver();
+
                 AbstractServiceRequest<?> request = ((RequestEvent) sosEvent).getRequest();
                 resolver.setRequest(request);
 
                 executorService.execute(resolver);
+            } else if (sosEvent instanceof ExceptionEvent) {
+                throw new UnsupportedOperationException();
             } else {
                 logger.error("Wrong type of event", sosEvent.getClass());
             }

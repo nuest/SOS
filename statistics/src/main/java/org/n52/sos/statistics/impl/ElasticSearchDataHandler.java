@@ -48,6 +48,24 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminDataHandler {
 
+    // TODO remove the Singleton Pattern
+    private static final ElasticSearchDataHandler _INSTANCE;
+
+    static {
+        _INSTANCE = new ElasticSearchDataHandler();
+        ElasticSearchSettings settings = new ElasticSearchSettings(true);
+        settings.setClusterName("embedded-cluster");
+        settings.setIndexId("myindex");
+        settings.setTypeId("mytype");
+
+        _INSTANCE.init(settings);
+    }
+
+    public static ElasticSearchDataHandler getInstance()
+    {
+        return _INSTANCE;
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(ElasticSearchDataHandler.class);
 
     private Node node;

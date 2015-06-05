@@ -26,22 +26,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers.interfaces;
 
-import javax.inject.Named;
+import java.util.Map;
 
-import org.n52.sos.request.GetCapabilitiesRequest;
-import org.n52.sos.statistics.sos.SosDataMapping;
-
-@Named
-public class GetCapabilitiesRequestResolver extends AbstractSosRequestResolver<GetCapabilitiesRequest> {
-
-    @Override
-    protected void resolveConcreteRequest()
-    {
-        put(SosDataMapping.GC_VERSIONS_FIELD, request.getAcceptVersions());
-        put(SosDataMapping.GC_FORMATS_FIELD, request.getAcceptFormats());
-        put(SosDataMapping.GC_SECTIONS, request.getSections());
-        put(SosDataMapping.GC_UPDATE_SEQUENCE, request.getUpdateSequence());
-    }
+public interface IRequestResolver<T> {
+    public Map<String, Object> resolveAsMap(T request);
 }

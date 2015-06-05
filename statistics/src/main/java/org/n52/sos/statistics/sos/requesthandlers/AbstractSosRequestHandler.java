@@ -26,7 +26,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -39,14 +39,14 @@ import org.n52.sos.statistics.api.AbstractElasticSearchDataHolder;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLocationUtil;
 import org.n52.sos.statistics.impl.StatisticsLocationUtil;
 import org.n52.sos.statistics.sos.SosDataMapping;
-import org.n52.sos.statistics.sos.resolvers.interfaces.IRequestResolver;
+import org.n52.sos.statistics.sos.requesthandlers.interfaces.IRequestResolver;
 import org.n52.sos.util.net.IPAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractSosRequestResolver<T extends AbstractServiceRequest<?>> extends AbstractElasticSearchDataHolder implements IRequestResolver<T> {
+public abstract class AbstractSosRequestHandler<T extends AbstractServiceRequest<?>> extends AbstractElasticSearchDataHolder implements IRequestResolver<T> {
 
-    protected static final Logger logger = LoggerFactory.getLogger(AbstractSosRequestResolver.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractSosRequestHandler.class);
 
     protected T request;
 
@@ -54,7 +54,7 @@ public abstract class AbstractSosRequestResolver<T extends AbstractServiceReques
     @Inject
     protected IStatisticsLocationUtil locationUtil = new StatisticsLocationUtil();
 
-    private AbstractSosRequestResolver<?> init()
+    private AbstractSosRequestHandler<?> init()
     {
 
         // Global constants

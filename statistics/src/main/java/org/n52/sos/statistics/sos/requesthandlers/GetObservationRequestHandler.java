@@ -26,22 +26,24 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers;
 
 import javax.inject.Named;
 
-import org.n52.sos.request.DescribeSensorRequest;
+import org.n52.sos.request.GetObservationRequest;
 import org.n52.sos.statistics.sos.SosDataMapping;
-import org.n52.sos.statistics.sos.models.SosTimeJsonHolder;
 
 @Named
-public class DescribeSensorRequestResolver extends AbstractSosRequestResolver<DescribeSensorRequest> {
+public class GetObservationRequestHandler extends AbstractSosRequestHandler<GetObservationRequest> {
 
     @Override
     protected void resolveConcreteRequest()
     {
-        put(SosDataMapping.DS_PROCEDURE, request.getProcedure());
-        put(SosDataMapping.DS_PROCEDURE_DESC_FORMAT, request.getProcedureDescriptionFormat());
-        put(SosDataMapping.DS_VALID_TIME, SosTimeJsonHolder.convert(request.getValidTime()).getAsMap());
+        put(SosDataMapping.GO_PROCEDURES, request.getProcedures());
+        put(SosDataMapping.GO_OFFERINGS, request.getOfferings());
+        put(SosDataMapping.GO_OBSERVED_PROPERTIES, request.getObservedProperties());
+        // TODO implement spatial filter
+        // put(SosDataMapping.GO_SPATIAL_FILTER,request.getSpatialFilter());
+        // TODO implement temporalfilter
     }
 }

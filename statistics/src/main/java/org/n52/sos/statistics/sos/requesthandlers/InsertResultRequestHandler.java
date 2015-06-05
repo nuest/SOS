@@ -1,4 +1,4 @@
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers;
 
 import javax.inject.Named;
 
@@ -6,7 +6,7 @@ import org.n52.sos.request.InsertResultRequest;
 import org.n52.sos.statistics.sos.SosDataMapping;
 
 @Named
-public class InsertResultRequestResolver extends AbstractSosRequestResolver<InsertResultRequest> {
+public class InsertResultRequestHandler extends AbstractSosRequestHandler<InsertResultRequest> {
 
     @Override
     protected void resolveConcreteRequest()

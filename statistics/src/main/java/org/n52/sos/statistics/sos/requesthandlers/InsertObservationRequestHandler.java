@@ -1,4 +1,4 @@
-package org.n52.sos.statistics.sos.resolvers;
+package org.n52.sos.statistics.sos.requesthandlers;
 
 import javax.inject.Named;
 
@@ -6,7 +6,7 @@ import org.n52.sos.request.InsertObservationRequest;
 import org.n52.sos.statistics.sos.SosDataMapping;
 
 @Named
-public class InsertObservationRequestResolver extends AbstractSosRequestResolver<InsertObservationRequest> {
+public class InsertObservationRequestHandler extends AbstractSosRequestHandler<InsertObservationRequest> {
 
     @Override
     protected void resolveConcreteRequest()

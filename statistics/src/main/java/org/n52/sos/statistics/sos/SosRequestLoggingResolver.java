@@ -48,102 +48,94 @@ import org.n52.sos.request.InsertResultRequest;
 import org.n52.sos.request.InsertResultTemplateRequest;
 import org.n52.sos.request.InsertSensorRequest;
 import org.n52.sos.request.UpdateSensorRequest;
-import org.n52.sos.statistics.api.ElasticSearchSettings;
-import org.n52.sos.statistics.api.interfaces.IAdminDataHandler;
 import org.n52.sos.statistics.api.interfaces.IStatisticsDataHandler;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLoggingResolver;
 import org.n52.sos.statistics.impl.ElasticSearchDataHandler;
-import org.n52.sos.statistics.sos.resolvers.DeleteSensorRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.DescribeSensorRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetCapabilitiesRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetDataAvailabilityRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetFeatureOfInterestRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetObservationByIdRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetObservationRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetResultRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.GetResultTemplateRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.InsertObservationRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.InsertResultRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.InsertResultTemplateRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.InsertSensorRequestResolver;
-import org.n52.sos.statistics.sos.resolvers.UpdateSensorRequestResolver;
+import org.n52.sos.statistics.sos.requesthandlers.DeleteSensorRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.DescribeSensorRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetCapabilitiesRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetDataAvailabilityRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetFeatureOfInterestRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetObservationByIdRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetObservationRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetResultRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.GetResultTemplateRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.InsertObservationRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.InsertResultRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.InsertResultTemplateRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.InsertSensorRequestHandler;
+import org.n52.sos.statistics.sos.requesthandlers.UpdateSensorRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SosRequestLoggingResolver implements IStatisticsLoggingResolver {
 
-    private static final Logger logger = LoggerFactory.getLogger(ElasticSearchDataHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SosRequestLoggingResolver.class);
 
     // FIXME remove new object in DI environment
     @Inject
-    private IStatisticsDataHandler dataHandler = new ElasticSearchDataHandler();
+    private IStatisticsDataHandler dataHandler = ElasticSearchDataHandler.getInstance();
 
     // ------------- Injected resolvers ----------------
     // FIXME remove new object in DI environment
     @Inject
-    private GetCapabilitiesRequestResolver getCapabilitiesResolver = new GetCapabilitiesRequestResolver();
+    private GetCapabilitiesRequestHandler getCapabilitiesResolver = new GetCapabilitiesRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetObservationRequestResolver getObservationRequestResolver = new GetObservationRequestResolver();
+    private GetObservationRequestHandler getObservationRequestResolver = new GetObservationRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private DescribeSensorRequestResolver describeSensorResolver = new DescribeSensorRequestResolver();
+    private DescribeSensorRequestHandler describeSensorResolver = new DescribeSensorRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private DeleteSensorRequestResolver deleteSensorRequestResolver = new DeleteSensorRequestResolver();
+    private DeleteSensorRequestHandler deleteSensorRequestResolver = new DeleteSensorRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetDataAvailabilityRequestResolver getDataAvailabilityRequestResolver = new GetDataAvailabilityRequestResolver();
+    private GetDataAvailabilityRequestHandler getDataAvailabilityRequestResolver = new GetDataAvailabilityRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetFeatureOfInterestRequestResolver getFeatureOfInterestRequestResolver = new GetFeatureOfInterestRequestResolver();
+    private GetFeatureOfInterestRequestHandler getFeatureOfInterestRequestResolver = new GetFeatureOfInterestRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetObservationByIdRequestResolver getObservationByIdRequestResolver = new GetObservationByIdRequestResolver();
+    private GetObservationByIdRequestHandler getObservationByIdRequestResolver = new GetObservationByIdRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetResultRequestResolver getResultRequestResolver = new GetResultRequestResolver();
+    private GetResultRequestHandler getResultRequestResolver = new GetResultRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private GetResultTemplateRequestResolver getResultTemplateRequestResolver = new GetResultTemplateRequestResolver();
+    private GetResultTemplateRequestHandler getResultTemplateRequestResolver = new GetResultTemplateRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private InsertObservationRequestResolver insertObservationRequestResolver = new InsertObservationRequestResolver();
+    private InsertObservationRequestHandler insertObservationRequestResolver = new InsertObservationRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private InsertResultRequestResolver insertResultRequestResolver = new InsertResultRequestResolver();
+    private InsertResultRequestHandler insertResultRequestResolver = new InsertResultRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private InsertResultTemplateRequestResolver insertResultTemplateRequestResolver = new InsertResultTemplateRequestResolver();
+    private InsertResultTemplateRequestHandler insertResultTemplateRequestResolver = new InsertResultTemplateRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private InsertSensorRequestResolver insertSensorRequestResolver = new InsertSensorRequestResolver();
+    private InsertSensorRequestHandler insertSensorRequestResolver = new InsertSensorRequestHandler();
 
     // FIXME remove new object in DI environment
     @Inject
-    private UpdateSensorRequestResolver updateSensorRequestResolver = new UpdateSensorRequestResolver();
+    private UpdateSensorRequestHandler updateSensorRequestResolver = new UpdateSensorRequestHandler();
 
     private AbstractServiceRequest<?> request;
 
     public SosRequestLoggingResolver() {
-        // TODO remove if ES settings read with API
-        ElasticSearchSettings settings = new ElasticSearchSettings(true);
-        settings.setClusterName("embedded-cluster");
-        settings.setIndexId("myindex");
-        settings.setTypeId("mytype");
-        ((IAdminDataHandler) dataHandler).init(settings);
     }
 
     @Override
