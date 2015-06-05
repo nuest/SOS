@@ -1,3 +1,14 @@
+#Architectural overview
+
+The SosStatisticsLoggerListener class receives the events from the SosEventBus. Currently only the RequestEvent are processed.
+
+The SosRequestLoggingResolver routes the Request object based on the event's request type to the proper XXXHandler classes. (e.g. GetCapabilitiesRequestHandler, DescribeSensorRequestHandler etc...)
+
+In the XXXHandlers the data will be extracted from the Request object and a Map<String,Object> is given back containing the extracted informations.
+
+This Map<String,Object> is persisted to the ElasticSearch database. The ElasticSearch client API automatically converts the Objects to JSON strings. Even the 
+Map<String,Map<String,Object>> hierarchical embedded maps also.
+
 #Setup
 
 - Checkout this branch.
