@@ -20,8 +20,8 @@
 
 ![Discover mode](screenshots/discover-mode.JPG)
 
-- with the default kibana settings set up click on the link to view the bar chart about the count by request types this year
+- with the default kibana settings setup click on the link to view the bar chart of the number of counts by request types this year.
 
-![Bar chart](schreenshots\discover-mode.JPG)
+![Bar chart](schreenshots/discover-mode.JPG)
 
 http://localhost:5601/#/visualize/create?type=histogram&indexPattern=myindex&_g=(refreshInterval:(display:Off,section:0,value:0),time:(from:now%2Fy,mode:quick,to:now%2Fy))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:operation-name,order:desc,orderBy:'1',size:5),schema:segment,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))
