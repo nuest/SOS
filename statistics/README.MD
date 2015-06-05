@@ -4,10 +4,10 @@ The SosStatisticsLoggerListener class receives the events from the SosEventBus. 
 
 The SosRequestLoggingResolver routes the Request object based on the event's request type to the proper XXXHandler classes. (e.g. GetCapabilitiesRequestHandler, DescribeSensorRequestHandler etc...)
 
-In the XXXHandlers the data will be extracted from the Request object and a Map<String,Object> is given back containing the extracted informations.
+In the XXXHandlers the data will be extracted from the Request object and a `Map<String,Object>` is given back containing the extracted informations.
 
-This Map<String,Object> is persisted to the ElasticSearch database. The ElasticSearch client API automatically converts the Objects to JSON strings. Even the 
-Map<String,Map<String,Object>> hierarchical embedded maps also.
+This `Map<String,Object>` is persisted to the ElasticSearch database. The ElasticSearch client API automatically converts the Objects to JSON strings. Even the 
+`Map<String,Map<String,Object>>` hierarchical embedded maps also.
 
 #Setup
 
@@ -17,7 +17,7 @@ Map<String,Map<String,Object>> hierarchical embedded maps also.
 ` cluster.name: embedded-cluster `
 - Install Kibana 4.X on your local machine. https://www.elastic.co/downloads/kibana
 - Run `maven clean install -DskipTests=true` from the SOS root project.
-- Run  `jetty:run` from the webapp module. If the port is already occupied, go to the webapp/pom.xml file and change it under the Jetty <plugin> section.
+- Run  `jetty:run` from the webapp module. If the port is already occupied, go to the webapp/pom.xml file and change it under the Jetty `<plugin>` section.
 - Goto localhost:8080 and set up your SOS deployments. 
 - Start elasticsearch with `bin/elasticsearch.bat` on windows 
 - Start kibana with `bin\kibana.bat` on windows
