@@ -33,31 +33,22 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.n52.sos.statistics.api.ElasticSearchSettings;
-import org.n52.sos.statistics.impl.ElasticSearchDataHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class ElasticSearchAwareTest extends SpringBaseTest {
 
-    protected static boolean ROLLBACK = true;
-
-    @Autowired
-    protected ElasticSearchDataHandler handler;
-
     private static Node embeddedNode;
 
-    protected ElasticSearchSettings settings;
+    protected ElasticSearchSettings clientSettings;
 
     public ElasticSearchAwareTest() {
 
-        settings = new ElasticSearchSettings(true);
-        settings.setClusterName("embedded-cluster");
-        settings.setIndexId("myindex");
-        settings.setTypeId("mytype");
+        clientSettings = new ElasticSearchSettings(true);
+        clientSettings.setClusterName("embedded-cluster");
+        clientSettings.setIndexId("myindex");
+        clientSettings.setTypeId("mytype");
     }
 
     @BeforeClass
@@ -66,7 +57,7 @@ public abstract class ElasticSearchAwareTest extends SpringBaseTest {
         logger.debug("Starting embedded node");
         Settings settings = ImmutableSettings.settingsBuilder().loadFromClasspath("elasticsearch_embedded.yml").build();
         embeddedNode = NodeBuilder.nodeBuilder().settings(settings).build();
-        // embeddedNode.start();
+        embeddedNode.start();
         logger.debug("Started embedded node");
     }
 
@@ -75,26 +66,6 @@ public abstract class ElasticSearchAwareTest extends SpringBaseTest {
     {
         logger.debug("Closing embedded node");
         embeddedNode.close();
-    }
-
-    @Before
-    public void before()
-    {
-        if (handler.getClient() == null) {
-            handler.init(settings);
-        }
-    }
-
-    @After
-    public void after()
-    {
-        if (ROLLBACK) {
-            try {
-                handler.deleteIndex(settings.getIndexId());
-            } catch (Throwable e) {
-                logger.error(null, e);
-            }
-        }
     }
 
     protected static Client getEmbeddedClient()

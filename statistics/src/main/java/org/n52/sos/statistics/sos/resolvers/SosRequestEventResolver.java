@@ -26,12 +26,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos;
+package org.n52.sos.statistics.sos.resolvers;
 
 import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.n52.sos.gda.GetDataAvailabilityRequest;
 import org.n52.sos.request.AbstractServiceRequest;
@@ -49,28 +50,29 @@ import org.n52.sos.request.InsertResultTemplateRequest;
 import org.n52.sos.request.InsertSensorRequest;
 import org.n52.sos.request.UpdateSensorRequest;
 import org.n52.sos.statistics.api.interfaces.IStatisticsDataHandler;
-import org.n52.sos.statistics.api.interfaces.IStatisticsLoggingResolver;
+import org.n52.sos.statistics.api.interfaces.IStatisticsEventResolver;
 import org.n52.sos.statistics.impl.ElasticSearchDataHandler;
-import org.n52.sos.statistics.sos.requesthandlers.DeleteSensorRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.DescribeSensorRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetCapabilitiesRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetDataAvailabilityRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetFeatureOfInterestRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetObservationByIdRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetObservationRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetResultRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.GetResultTemplateRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.InsertObservationRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.InsertResultRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.InsertResultTemplateRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.InsertSensorRequestHandler;
-import org.n52.sos.statistics.sos.requesthandlers.UpdateSensorRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.DeleteSensorRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.DescribeSensorRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetCapabilitiesRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetDataAvailabilityRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetFeatureOfInterestRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetObservationByIdRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetObservationRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetResultRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.GetResultTemplateRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.InsertObservationRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.InsertResultRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.InsertResultTemplateRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.InsertSensorRequestHandler;
+import org.n52.sos.statistics.sos.handlers.requests.UpdateSensorRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SosRequestLoggingResolver implements IStatisticsLoggingResolver {
+@Named
+public class SosRequestEventResolver implements IStatisticsEventResolver {
 
-    private static final Logger logger = LoggerFactory.getLogger(SosRequestLoggingResolver.class);
+    private static final Logger logger = LoggerFactory.getLogger(SosRequestEventResolver.class);
 
     // FIXME remove new object in DI environment
     @Inject
@@ -135,7 +137,7 @@ public class SosRequestLoggingResolver implements IStatisticsLoggingResolver {
 
     private AbstractServiceRequest<?> request;
 
-    public SosRequestLoggingResolver() {
+    public SosRequestEventResolver() {
     }
 
     @Override

@@ -40,4 +40,6 @@ public interface IAdminDataHandler {
     public Client getClient();
 
     void init(ElasticSearchSettings settings);
+
+    boolean isLoggingEnabled();
 }

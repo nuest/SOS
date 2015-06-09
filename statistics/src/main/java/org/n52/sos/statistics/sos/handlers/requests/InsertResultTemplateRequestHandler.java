@@ -1,4 +1,4 @@
-package org.n52.sos.statistics.sos.requesthandlers;
+package org.n52.sos.statistics.sos.handlers.requests;
 
 import javax.inject.Named;
 

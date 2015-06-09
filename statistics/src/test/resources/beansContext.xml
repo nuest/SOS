@@ -13,9 +13,6 @@
 				<context:include-filter type="annotation" expression="javax.inject.Named" />
 	</context:component-scan>
 
-	<bean id="sosRequestResolver" class="org.n52.sos.statistics.sos.SosRequestLoggingResolver"
-		scope="singleton"></bean>
-
 	<bean id="sosRequestLoggerListener" class="org.n52.sos.statistics.sos.SosStatisticsLoggerListener"
 		scope="singleton"></bean>
 

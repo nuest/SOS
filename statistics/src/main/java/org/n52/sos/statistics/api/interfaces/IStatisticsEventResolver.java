@@ -26,24 +26,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.requesthandlers;
+package org.n52.sos.statistics.api.interfaces;
 
-import javax.inject.Named;
 
-import org.n52.sos.request.GetObservationRequest;
-import org.n52.sos.statistics.sos.SosDataMapping;
-
-@Named
-public class GetObservationRequestHandler extends AbstractSosRequestHandler<GetObservationRequest> {
-
-    @Override
-    protected void resolveConcreteRequest()
-    {
-        put(SosDataMapping.GO_PROCEDURES, request.getProcedures());
-        put(SosDataMapping.GO_OFFERINGS, request.getOfferings());
-        put(SosDataMapping.GO_OBSERVED_PROPERTIES, request.getObservedProperties());
-        // TODO implement spatial filter
-        // put(SosDataMapping.GO_SPATIAL_FILTER,request.getSpatialFilter());
-        // TODO implement temporalfilter
-    }
+public interface IStatisticsEventResolver extends Runnable {
 }

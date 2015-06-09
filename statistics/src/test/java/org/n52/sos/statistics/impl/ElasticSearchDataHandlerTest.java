@@ -41,6 +41,7 @@ public class ElasticSearchDataHandlerTest extends ElasticSearchAwareTest {
     @Test
     public void connectInLanMode() throws Exception
     {
+        ElasticSearchDataHandler handler = ElasticSearchDataHandler.getInstance();
         Map<String, Object> data = new HashMap<>();
         data.put("test", "test-string");
         IndexResponse idx = handler.persist(data);

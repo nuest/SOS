@@ -26,7 +26,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos;
+package org.n52.sos.statistics.sos.resolvers;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -45,16 +45,17 @@ import org.n52.sos.request.GetCapabilitiesRequest;
 import org.n52.sos.request.RequestContext;
 import org.n52.sos.statistics.MockitoBaseTest;
 import org.n52.sos.statistics.api.interfaces.IStatisticsDataHandler;
+import org.n52.sos.statistics.sos.resolvers.SosRequestEventResolver;
 import org.n52.sos.util.net.IPAddress;
 
-public class SosRequestLoggingResolverTest extends MockitoBaseTest {
+public class SosRequestEventResolverTest extends MockitoBaseTest {
 
     @Mock
     IStatisticsDataHandler dataHandler;
 
     @Inject
     @InjectMocks
-    SosRequestLoggingResolver resolver;
+    SosRequestEventResolver resolver;
 
     @Captor
     ArgumentCaptor<Map<String, Object>> captor;

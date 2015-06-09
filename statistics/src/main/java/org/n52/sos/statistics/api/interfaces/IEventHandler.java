@@ -26,11 +26,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics;
+package org.n52.sos.statistics.api.interfaces;
 
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import java.util.Map;
 
-@RunWith(MockitoJUnitRunner.class)
-public abstract class MockitoBaseTest {
+public interface IEventHandler<T> {
+    public Map<String, Object> resolveAsMap(T event);
 }

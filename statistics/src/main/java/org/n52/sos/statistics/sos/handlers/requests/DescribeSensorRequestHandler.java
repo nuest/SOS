@@ -26,22 +26,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.requesthandlers;
+package org.n52.sos.statistics.sos.handlers.requests;
 
 import javax.inject.Named;
 
-import org.n52.sos.request.GetCapabilitiesRequest;
+import org.n52.sos.request.DescribeSensorRequest;
 import org.n52.sos.statistics.sos.SosDataMapping;
+import org.n52.sos.statistics.sos.models.SosTimeJsonHolder;
 
 @Named
-public class GetCapabilitiesRequestHandler extends AbstractSosRequestHandler<GetCapabilitiesRequest> {
+public class DescribeSensorRequestHandler extends AbstractSosRequestHandler<DescribeSensorRequest> {
 
     @Override
     protected void resolveConcreteRequest()
     {
-        put(SosDataMapping.GC_VERSIONS_FIELD, request.getAcceptVersions());
-        put(SosDataMapping.GC_FORMATS_FIELD, request.getAcceptFormats());
-        put(SosDataMapping.GC_SECTIONS, request.getSections());
-        put(SosDataMapping.GC_UPDATE_SEQUENCE, request.getUpdateSequence());
+        put(SosDataMapping.DS_PROCEDURE, request.getProcedure());
+        put(SosDataMapping.DS_PROCEDURE_DESC_FORMAT, request.getProcedureDescriptionFormat());
+        put(SosDataMapping.DS_VALID_TIME, SosTimeJsonHolder.convert(request.getValidTime()).getAsMap());
     }
 }

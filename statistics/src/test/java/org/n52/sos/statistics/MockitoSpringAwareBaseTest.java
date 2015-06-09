@@ -26,22 +26,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.requesthandlers;
+package org.n52.sos.statistics;
 
-import javax.inject.Named;
+import org.junit.Before;
+import org.mockito.MockitoAnnotations;
 
-import org.n52.sos.request.DescribeSensorRequest;
-import org.n52.sos.statistics.sos.SosDataMapping;
-import org.n52.sos.statistics.sos.models.SosTimeJsonHolder;
+public abstract class MockitoSpringAwareBaseTest extends SpringBaseTest {
 
-@Named
-public class DescribeSensorRequestHandler extends AbstractSosRequestHandler<DescribeSensorRequest> {
-
-    @Override
-    protected void resolveConcreteRequest()
+    @Before
+    public void before()
     {
-        put(SosDataMapping.DS_PROCEDURE, request.getProcedure());
-        put(SosDataMapping.DS_PROCEDURE_DESC_FORMAT, request.getProcedureDescriptionFormat());
-        put(SosDataMapping.DS_VALID_TIME, SosTimeJsonHolder.convert(request.getValidTime()).getAsMap());
+        MockitoAnnotations.initMocks(this);
     }
 }

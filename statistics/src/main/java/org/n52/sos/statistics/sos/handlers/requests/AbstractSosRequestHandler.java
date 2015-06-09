@@ -26,25 +26,23 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos.requesthandlers;
+package org.n52.sos.statistics.sos.handlers.requests;
 
-import java.util.Calendar;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.joda.time.DateTimeZone;
 import org.n52.sos.request.AbstractServiceRequest;
 import org.n52.sos.statistics.api.AbstractElasticSearchDataHolder;
+import org.n52.sos.statistics.api.interfaces.IEventHandler;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLocationUtil;
 import org.n52.sos.statistics.impl.StatisticsLocationUtil;
 import org.n52.sos.statistics.sos.SosDataMapping;
-import org.n52.sos.statistics.sos.requesthandlers.interfaces.IRequestResolver;
 import org.n52.sos.util.net.IPAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractSosRequestHandler<T extends AbstractServiceRequest<?>> extends AbstractElasticSearchDataHolder implements IRequestResolver<T> {
+public abstract class AbstractSosRequestHandler<T extends AbstractServiceRequest<?>> extends AbstractElasticSearchDataHolder implements IEventHandler<T> {
 
     protected static final Logger logger = LoggerFactory.getLogger(AbstractSosRequestHandler.class);
 
@@ -58,7 +56,6 @@ public abstract class AbstractSosRequestHandler<T extends AbstractServiceRequest
     {
 
         // Global constants
-        put(SosDataMapping.TIMESTAMP_FIELD, Calendar.getInstance(DateTimeZone.UTC.toTimeZone()));
         put(SosDataMapping.SERVICE_FIELD, request.getOperationKey().getService());
         put(SosDataMapping.VERSION_FIELD, request.getOperationKey().getVersion());
         put(SosDataMapping.OPERATION_NAME_FIELD, request.getOperationKey().getOperation());

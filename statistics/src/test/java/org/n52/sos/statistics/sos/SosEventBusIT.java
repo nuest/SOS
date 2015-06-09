@@ -49,8 +49,6 @@ public class SosEventBusIT extends ElasticSearchAwareTest {
     @Test
     public void sendSosEventToElasticSearch() throws InterruptedException
     {
-        ROLLBACK = false;
-
         RequestContext ctx = new RequestContext();
         ctx.setIPAddress(new IPAddress("241.56.199.99"));
 
@@ -67,9 +65,9 @@ public class SosEventBusIT extends ElasticSearchAwareTest {
         SosEventBus.fire(evt);
 
         // wait for the other thread to stop, hopefully
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
-        SearchResponse response = getEmbeddedClient().prepareSearch(settings.getIndexId()).setTypes(settings.getTypeId()).get();
+        SearchResponse response = getEmbeddedClient().prepareSearch(clientSettings.getIndexId()).setTypes(clientSettings.getTypeId()).get();
 
         logger.debug(response.toString());
         SearchHit hit = response.getHits().getAt(0);

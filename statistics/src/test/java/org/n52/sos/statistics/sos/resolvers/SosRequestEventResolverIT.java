@@ -26,26 +26,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.sos;
+package org.n52.sos.statistics.sos.resolvers;
 
 import java.util.Arrays;
 
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchResponse;
+import org.junit.Assert;
 import org.junit.Test;
 import org.n52.sos.request.GetCapabilitiesRequest;
 import org.n52.sos.request.RequestContext;
 import org.n52.sos.statistics.ElasticSearchAwareTest;
 import org.n52.sos.util.net.IPAddress;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public class SosRequestLoggingResolverIT extends ElasticSearchAwareTest {
+public class SosRequestEventResolverIT extends ElasticSearchAwareTest {
 
-    @Autowired
-    SosRequestLoggingResolver resolve;
+    SosRequestEventResolver resolve = new SosRequestEventResolver();
 
     @Test
-    public void persistRequestToDb()
+    public void persistExceptionToDb() throws InterruptedException
     {
-        ROLLBACK = false;
 
         RequestContext ctx = new RequestContext();
         ctx.setIPAddress(new IPAddress("172.168.22.53"));
@@ -58,6 +58,20 @@ public class SosRequestLoggingResolverIT extends ElasticSearchAwareTest {
         r.setAcceptVersions(Arrays.asList("1.0", "1.1"));
 
         resolve.setRequest(r);
+
+        long last = 0;
+
+        try {
+            last = getEmbeddedClient().prepareSearch(clientSettings.getIndexId()).setTypes(clientSettings.getTypeId()).get().getHits().getTotalHits();
+        } catch (ElasticsearchException e) {
+        }
+
         resolve.run();
+        getEmbeddedClient().admin().indices().prepareRefresh(clientSettings.getIndexId());
+        // eventually realtime should be enough
+        Thread.sleep(2000);
+
+        SearchResponse resp = getEmbeddedClient().prepareSearch(clientSettings.getIndexId()).setTypes(clientSettings.getTypeId()).get();
+        Assert.assertTrue(resp.getHits().getTotalHits() > last);
     }
 }

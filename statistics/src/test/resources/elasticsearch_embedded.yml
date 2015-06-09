@@ -44,11 +44,11 @@ node.name: "Michael Embedded Jordan"
 #
 # Allow this node to be eligible as a master node (enabled by default):
 #
-#node.master: true
+node.master: true
 #
 # Allow this node to store data (enabled by default):
 #
-#node.data: true
+node.data: true
 
 # You can exploit these settings to design advanced cluster topologies.
 #
@@ -101,10 +101,6 @@ node.name: "Michael Embedded Jordan"
 # See <http://elasticsearch.org/guide/en/elasticsearch/reference/current/index-modules.html> and
 # <http://elasticsearch.org/guide/en/elasticsearch/reference/current/indices-create-index.html>
 # for more information.
-
-index :
-    store:
-        type: memory
 
 # Set the number of shards (splits) of an index (5 by default):
 #

@@ -28,6 +28,7 @@
  */
 package org.n52.sos.statistics.impl;
 
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Objects;
 
@@ -39,34 +40,36 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
+import org.joda.time.DateTimeZone;
 import org.n52.sos.statistics.api.ElasticSearchSettings;
 import org.n52.sos.statistics.api.interfaces.IAdminDataHandler;
 import org.n52.sos.statistics.api.interfaces.IStatisticsDataHandler;
+import org.n52.sos.statistics.sos.SosDataMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
 public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminDataHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(ElasticSearchDataHandler.class);
+
     // TODO remove the Singleton Pattern
-    private static final ElasticSearchDataHandler _INSTANCE;
+    private static ElasticSearchDataHandler _INSTANCE;
 
-    static {
-        _INSTANCE = new ElasticSearchDataHandler();
-        ElasticSearchSettings settings = new ElasticSearchSettings(true);
-        settings.setClusterName("embedded-cluster");
-        settings.setIndexId("myindex");
-        settings.setTypeId("mytype");
-
-        _INSTANCE.init(settings);
-    }
-
-    public static ElasticSearchDataHandler getInstance()
+    // TODO not optimal for testing purposes only
+    public synchronized static ElasticSearchDataHandler getInstance()
     {
+        if (_INSTANCE == null) {
+            _INSTANCE = new ElasticSearchDataHandler();
+            ElasticSearchSettings settings = new ElasticSearchSettings(true);
+            settings.setClusterName("embedded-cluster");
+            settings.setIndexId("myindex");
+            settings.setTypeId("mytype");
+
+            _INSTANCE.init(settings);
+        }
         return _INSTANCE;
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(ElasticSearchDataHandler.class);
 
     private Node node;
 
@@ -88,7 +91,8 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
         if (!settings.isLoggingEnabled()) {
             return null;
         }
-
+        // add @timestamp field for the entry
+        dataMap.put(SosDataMapping.TIMESTAMP_FIELD, Calendar.getInstance(DateTimeZone.UTC.toTimeZone()));
         logger.debug("Persisting {}", dataMap);
         IndexResponse response = client.prepareIndex(settings.getIndexId(), settings.getTypeId()).setSource(dataMap).setOperationThreaded(false).get();
         return response;
@@ -169,5 +173,11 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
             logger.info("Closing ElasticSearch data handler");
             node.close();
         }
+    }
+
+    @Override
+    public boolean isLoggingEnabled()
+    {
+        return settings.isLoggingEnabled();
     }
 }

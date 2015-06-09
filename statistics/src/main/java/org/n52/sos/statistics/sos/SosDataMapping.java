@@ -144,4 +144,15 @@ public class SosDataMapping {
 
     public static final String GDA_PROCEDURES = "getdataavailability-procedures";
 
+    // --------------- CodedException --------------//
+    public static final String CEX_STATUS = "codedexception-status";
+
+    public static final String CEX_VERSION = "codedexception-version";
+
+    public static final String CEX_MESSAGE = "codedexception-message";
+
+    public static final String CEX_LOCATOR = "codedexception-locator";
+
+    public static final String CEX_SOAP_FAULT = "codedexception-soapfault";
+
 }

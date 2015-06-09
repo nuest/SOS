@@ -26,8 +26,39 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.sos.statistics.api.interfaces;
+package org.n52.sos.statistics.sos.resolvers;
 
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchResponse;
+import org.junit.Assert;
+import org.junit.Test;
+import org.n52.sos.decode.json.JSONDecodingException;
+import org.n52.sos.statistics.ElasticSearchAwareTest;
 
-public interface IStatisticsLoggingResolver extends Runnable {
+public class SosExceptionEventResolverIT extends ElasticSearchAwareTest {
+
+    SosExceptionEventResolver resolve = new SosExceptionEventResolver();
+
+    @Test
+    public void persistRequestToDb() throws InterruptedException
+    {
+        JSONDecodingException exp = new JSONDecodingException("message");
+        resolve.setException(exp);
+
+        long last = 0;
+
+        try {
+            last = getEmbeddedClient().prepareSearch(clientSettings.getIndexId()).setTypes(clientSettings.getTypeId()).get().getHits().getTotalHits();
+        } catch (ElasticsearchException e) {
+        }
+
+        resolve.run();
+        getEmbeddedClient().admin().indices().prepareRefresh(clientSettings.getIndexId());
+        // eventually realtime should be enough
+        Thread.sleep(2000);
+
+        SearchResponse resp = getEmbeddedClient().prepareSearch(clientSettings.getIndexId()).setTypes(clientSettings.getTypeId()).get();
+        Assert.assertTrue(resp.getHits().getTotalHits() > last);
+
+    }
 }
