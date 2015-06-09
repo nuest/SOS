@@ -28,12 +28,14 @@
  */
 package org.n52.sos.statistics.api.interfaces;
 
-import org.elasticsearch.common.geo.GeoPoint;
+import java.util.Map;
+
 import org.n52.sos.request.RequestContext;
 import org.n52.sos.util.net.IPAddress;
 
 public interface IStatisticsLocationUtil {
-    public GeoPoint ip2GeoPoint(IPAddress ip);
+    public Map<String, Object> ip2SpatialData(IPAddress ip);
 
     public IPAddress resolveOriginalIpAddress(RequestContext ctx);
+
 }

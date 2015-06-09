@@ -39,6 +39,8 @@ import org.n52.sos.request.RequestContext;
 import org.n52.sos.statistics.ElasticSearchAwareTest;
 import org.n52.sos.util.net.IPAddress;
 
+import com.google.common.base.Optional;
+
 public class SosRequestEventResolverIT extends ElasticSearchAwareTest {
 
     SosRequestEventResolver resolve = new SosRequestEventResolver();
@@ -58,7 +60,7 @@ public class SosRequestEventResolverIT extends ElasticSearchAwareTest {
         r.setAcceptVersions(Arrays.asList("1.0", "1.1"));
 
         resolve.setRequest(r);
-
+        new RequestContext().setIPAddress(Optional.<IPAddress> of(new IPAddress("asdf")));
         long last = 0;
 
         try {

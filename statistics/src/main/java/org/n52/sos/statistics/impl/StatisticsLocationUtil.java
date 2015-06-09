@@ -28,12 +28,29 @@
  */
 package org.n52.sos.statistics.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import javax.inject.Singleton;
 
 import org.elasticsearch.common.geo.GeoPoint;
 import org.n52.sos.request.RequestContext;
+import org.n52.sos.statistics.api.interfaces.IAdminStatisticsLocation;
 import org.n52.sos.statistics.api.interfaces.IStatisticsLocationUtil;
+import org.n52.sos.statistics.sos.SosDataMapping;
 import org.n52.sos.util.net.IPAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
+
+import com.maxmind.db.Reader.FileMode;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.Country;
+import com.maxmind.geoip2.record.Location;
 
 /**
  * Utility class for mapping objects to Elasticsearch specific Geolocation type
@@ -42,16 +59,43 @@ import org.n52.sos.util.net.IPAddress;
  */
 
 @Singleton
-public class StatisticsLocationUtil implements IStatisticsLocationUtil {
+public class StatisticsLocationUtil implements IStatisticsLocationUtil, IAdminStatisticsLocation {
+
+    private static final Logger logger = LoggerFactory.getLogger(StatisticsLocationUtil.class);
+
+    private LocationDatabaseType dbType;
+
+    private DatabaseReader reader;
 
     @Override
-    public GeoPoint ip2GeoPoint(IPAddress ip)
+    public Map<String, Object> ip2SpatialData(IPAddress ip)
     {
         if (ip == null) {
             return null;
         }
-        // TODO load it from database
-        return new GeoPoint(33.812092, -117.918974);
+
+        if (reader == null) {
+            logger.warn("Location database is not initialized. Exiting.");
+            return null;
+        }
+
+        try {
+            Map<String, Object> holder = new HashMap<>();
+            if (dbType == LocationDatabaseType.COUNTRY) {
+                Country country = reader.country(ip.asInetAddress()).getCountry();
+                holder.put(SosDataMapping.GEO_LOC_COUNTRY_CODE, country.getIsoCode());
+            } else {
+                CityResponse city = reader.city(ip.asInetAddress());
+                Location loc = city.getLocation();
+                holder.put(SosDataMapping.GEO_LOC_COUNTRY_CODE, city.getCountry().getIsoCode());
+                holder.put(SosDataMapping.GEO_LOC_CITY_CODE, city.getCity().getName());
+                holder.put(SosDataMapping.GEO_LOC_GEOPOINT, new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+            }
+            return holder;
+        } catch (Throwable e) {
+            logger.error("Can't convert IP to GeoIp", e);
+        }
+        return null;
     }
 
     /**
@@ -70,5 +114,45 @@ public class StatisticsLocationUtil implements IStatisticsLocationUtil {
         } else {
             return ctx.getIPAddress().orNull();
         }
+    }
+
+    @Override
+    public void init(LocationDatabaseType type,
+            String pathToDatabase)
+    {
+        Objects.requireNonNull(type);
+        Objects.requireNonNull(pathToDatabase);
+        logger.info("Init {} as type {} with file {}", getClass().toString(), type.toString(), pathToDatabase);
+        dbType = type;
+        try {
+            File f = ResourceUtils.getFile(pathToDatabase);
+            if (f == null) {
+                logger.error("couldn't find file {}", pathToDatabase);
+                return;
+            }
+
+            reader = new DatabaseReader.Builder(f).fileMode(FileMode.MEMORY_MAPPED).build();
+
+            // mismatch
+            if (!type.getGeoLite2Name().equals(reader.getMetadata().getDatabaseType())) {
+                logger.error("DatabaseType {} not match with the databasefile {}. Exiting", type.toString(), pathToDatabase);
+                close();
+                return;
+            }
+        } catch (Throwable e) {
+            logger.error("Couldn't initation geolocation database ", e);
+            reader = null;
+        }
+    }
+
+    @Override
+    public void close()
+    {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            logger.error("Error during closing GeoLite reader", e);
+        }
+        reader = null;
     }
 }

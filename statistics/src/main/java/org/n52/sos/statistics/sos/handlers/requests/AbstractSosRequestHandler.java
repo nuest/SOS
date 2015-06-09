@@ -63,7 +63,7 @@ public abstract class AbstractSosRequestHandler<T extends AbstractServiceRequest
         // requestcontext
         IPAddress ip = locationUtil.resolveOriginalIpAddress(request.getRequestContext());
         put(SosDataMapping.IP_ADDRESS_FIELD, ip);
-        put(SosDataMapping.SOURCE_GEOLOC_FIELD, locationUtil.ip2GeoPoint(ip));
+        put(SosDataMapping.SOURCE_GEOLOC_FIELD, locationUtil.ip2SpatialData(ip));
         put(SosDataMapping.PROXIED_REQUEST_FIELD, request.getRequestContext().getForwardedForChain().isPresent());
         return this;
     }

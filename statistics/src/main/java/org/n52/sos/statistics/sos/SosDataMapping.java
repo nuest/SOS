@@ -45,6 +45,15 @@ public class SosDataMapping {
 
     public static final String SOURCE_GEOLOC_FIELD = "source-geolocation";
 
+    // -------------- SUB FIELD ---------- //
+    public static final String GEO_LOC_COUNTRY_CODE = "country-code";
+
+    public static final String GEO_LOC_CITY_CODE = "city-name";
+
+    public static final String GEO_LOC_GEOPOINT = "geopoint";
+
+    // -------------- END SUB FIELD ---------- //
+
     public static final String PROXIED_REQUEST_FIELD = "proxied-request";
 
     // --------------- GETCAPABILITIES --------------//
