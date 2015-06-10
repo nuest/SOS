@@ -29,14 +29,18 @@
 package org.n52.sos.statistics.impl;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
@@ -91,7 +95,6 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
         if (!settings.isLoggingEnabled()) {
             return null;
         }
-        // add @timestamp field for the entry
         dataMap.put(SosDataMapping.TIMESTAMP_FIELD, Calendar.getInstance(DateTimeZone.UTC.toTimeZone()));
         logger.debug("Persisting {}", dataMap);
         IndexResponse response = client.prepareIndex(settings.getIndexId(), settings.getTypeId()).setSource(dataMap).setOperationThreaded(false).get();
@@ -104,16 +107,77 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
         return persist(dataMap, null);
     }
 
+    // -------- ADMIN INTERFACE ------------//
+    @Override
+    public void createSchema()
+    {
+        IndicesAdminClient indices = client.admin().indices();
+
+        // TODO this ugliness will be extracted during another user story
+        Map<String, Object> stringField = new HashMap<String, Object>();
+        stringField.put("type", "string");
+        stringField.put("index", "not_analyzed");
+
+        Map<String, Object> dateField = new HashMap<String, Object>();
+        stringField.put("type", "date");
+
+        Map<String, Object> geoPointField = new HashMap<String, Object>();
+        geoPointField.put("type", "geo_point");
+
+        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> mapping = new HashMap<String, Object>();
+        Map<String, Object> subproperties = new HashMap<String, Object>();
+        Map<String, Object> submap = new HashMap<String, Object>();
+
+        properties.put("properties", mapping);
+
+        mapping.put(SosDataMapping.GEO_LOC_FIELD, subproperties);
+
+        subproperties.put("properties", submap);
+        submap.put(SosDataMapping.GEO_LOC_CITY_CODE, stringField);
+        submap.put(SosDataMapping.GEO_LOC_COUNTRY_CODE, stringField);
+        submap.put(SosDataMapping.GEO_LOC_GEOPOINT, geoPointField);
+
+        if (indices.prepareExists(settings.getIndexId()).get().isExists()) {
+            logger.info("Index {} already exists", settings.getIndexId());
+
+            // update mapping
+            PutMappingResponse resp = indices.preparePutMapping(settings.getIndexId()).setType(settings.getTypeId()).setIgnoreConflicts(true).setSource(properties).get();
+            resp.toString();
+        } else {
+            // create new
+            logger.info("Index {} not exists creating a new one now.", settings.getIndexId());
+
+            CreateIndexResponse resp = indices.prepareCreate(settings.getIndexId()).addMapping(settings.getTypeId(), properties).get();
+
+        }
+
+    }
+
+    private void createMetadataType()
+    {
+        Map<String, Object> stringField = new HashMap<String, Object>();
+        stringField.put("type", "string");
+        stringField.put("index", "not_analyzed");
+        Map<String, Object> dateField = new HashMap<String, Object>();
+        stringField.put("type", "date");
+
+        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> mapping = new HashMap<String, Object>();
+
+        properties.put("properties", mapping);
+        mapping.put("version", stringField);
+        mapping.put("creation_date", dateField);
+        mapping.put("modification_date", dateField);
+
+        IndicesAdminClient indices = client.admin().indices();
+        indices.prepareCreate(settings.getTypeId()).addMapping(METADATA_TYPE_NAME, properties);
+    }
+
     @Override
     public void deleteIndex(String index)
     {
         client.admin().indices().prepareDelete(index).get();
-    }
-
-    @Override
-    public void createSchema()
-    {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -138,6 +202,9 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
             } else {
                 initRemoteMode(settings);
             }
+
+            // TODO should check database version in metadata and update
+            createSchema();
         } else {
             logger.info("Statistics collection is not enabled. Data will not will be collected.");
         }

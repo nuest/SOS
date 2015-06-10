@@ -41,4 +41,14 @@ public class StatisticsLocationUtilTest {
         Assert.assertNull(loc.ip2SpatialData(ip));
         // no harm done
     }
+
+    @Test
+    public void localhostIPAsCountry()
+    {
+        StatisticsLocationUtil loc = new StatisticsLocationUtil();
+        loc.init(LocationDatabaseType.COUNTRY, "classpath:geolite/GeoLite2-Country.mmdb");
+        IPAddress ip = new IPAddress("127.0.0.1");
+        System.out.println(loc.ip2SpatialData(ip));
+        Assert.assertNull(loc.ip2SpatialData(ip));
+    }
 }

@@ -7,6 +7,11 @@
 		<version>4.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>statistics</artifactId>
+	
+	<properties>
+		<elasticsearch-version>1.6.0</elasticsearch-version>
+	</properties>
+	
 	<dependencies>
 		<!-- MaxMind geo database -->
 		<dependency>
@@ -36,7 +41,7 @@
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<version>1.5.2</version>
+			<version>${elasticsearch-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>

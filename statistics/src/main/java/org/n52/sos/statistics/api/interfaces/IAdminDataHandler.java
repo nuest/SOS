@@ -33,6 +33,8 @@ import org.n52.sos.statistics.api.ElasticSearchSettings;
 
 public interface IAdminDataHandler {
 
+    public static final String METADATA_TYPE_NAME = "metadata";
+
     public void deleteIndex(String index);
 
     public void createSchema();

@@ -67,6 +67,11 @@ public class StatisticsLocationUtil implements IStatisticsLocationUtil, IAdminSt
 
     private DatabaseReader reader;
 
+    public StatisticsLocationUtil() {
+        // TODO remove self init from Settings API
+        init(LocationDatabaseType.CITY, "classpath:geolite/city.mmdb");
+    }
+
     @Override
     public Map<String, Object> ip2SpatialData(IPAddress ip)
     {
@@ -93,7 +98,7 @@ public class StatisticsLocationUtil implements IStatisticsLocationUtil, IAdminSt
             }
             return holder;
         } catch (Throwable e) {
-            logger.error("Can't convert IP to GeoIp", e);
+            logger.warn("Can't convert IP to GeoIp", e);
         }
         return null;
     }

@@ -43,7 +43,7 @@ public class SosDataMapping {
 
     public static final String IP_ADDRESS_FIELD = "source-ip-address";
 
-    public static final String SOURCE_GEOLOC_FIELD = "source-geolocation";
+    public static final String GEO_LOC_FIELD = "source-geolocation";
 
     // -------------- SUB FIELD ---------- //
     public static final String GEO_LOC_COUNTRY_CODE = "country-code";
