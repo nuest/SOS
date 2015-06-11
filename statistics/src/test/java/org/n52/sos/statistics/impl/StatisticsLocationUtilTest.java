@@ -29,7 +29,11 @@ public class StatisticsLocationUtilTest {
         IPAddress ip = new IPAddress("67.20.172.183");
 
         Map<String, Object> map = loc.ip2SpatialData(ip);
+
+        Assert.assertNotNull(map);
         Assert.assertEquals("US", map.get(SosDataMapping.GEO_LOC_COUNTRY_CODE));
+        Assert.assertNotNull(map.get(SosDataMapping.GEO_LOC_CITY_CODE));
+        Assert.assertNotNull(map.get(SosDataMapping.GEO_LOC_GEOPOINT));
     }
 
     @Test

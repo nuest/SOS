@@ -50,6 +50,7 @@ public class SosExceptionEventResolverIT extends ElasticSearchAwareTest {
         try {
             last = getEmbeddedClient().prepareSearch(clientSettings.getIndexId()).setTypes(clientSettings.getTypeId()).get().getHits().getTotalHits();
         } catch (ElasticsearchException e) {
+            logger.info(null, e);
         }
 
         resolve.run();
