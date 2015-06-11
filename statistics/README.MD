@@ -37,14 +37,14 @@ The Elasticsearch client API automatically converts the map to a JSON string, in
 - Run the test cases from the SoupUI.
 - Set up the index in kibana the index name is now `myindex` and the timestamp field is `@timestamp`
 
-![Kibana set up index](screenshots/kibana-index-setup.JPG)
+![Kibana set up index](https://wiki.52north.org/pub/Projects/GSoC2015Statistics4Ows/kibana-index-setup.JPG)
 
 - Head to the discover mode and check if you see any raw data there.
 
-![Discover mode](screenshots/discover-mode.JPG)
+![Discover mode](https://wiki.52north.org/pub/Projects/GSoC2015Statistics4Ows/discover-mode.JPG)
 
 - with the default kibana settings setup click on the link to view the bar chart of the number of counts by request types this year.
 
-![Bar chart](screenshots/kibana-countoperations.JPG)
+![Bar chart](https://wiki.52north.org/pub/Projects/GSoC2015Statistics4Ows/kibana-countoperations.JPG)
 
 http://localhost:5601/#/visualize/create?type=histogram&indexPattern=myindex&_g=(refreshInterval:(display:Off,section:0,value:0),time:(from:now%2Fy,mode:quick,to:now%2Fy))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:operation-name,order:desc,orderBy:'1',size:5),schema:segment,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))
