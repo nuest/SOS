@@ -11,3 +11,5 @@ release.properties
 .externalToolBuilders
 extensions/do/core/configuration.db
 **.*~
+statistics/data/
+webapp/src/main/webapp/META-INF/context.xml
