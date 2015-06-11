@@ -60,14 +60,14 @@ public class ElasticSearchDataHandler implements IStatisticsDataHandler, IAdminD
     // TODO remove the Singleton Pattern
     private static ElasticSearchDataHandler _INSTANCE;
 
-    // TODO not optimal for testing purposes only
+    // TODO not optimal for testing purposes only - DNU: also, inject the singleton instead of using getInstance()!!
     public synchronized static ElasticSearchDataHandler getInstance()
     {
         if (_INSTANCE == null) {
             _INSTANCE = new ElasticSearchDataHandler();
             ElasticSearchSettings settings = new ElasticSearchSettings(true);
-            settings.setClusterName("embedded-cluster");
-            settings.setIndexId("myindex");
+            settings.setClusterName("ogc-statistics-cluster");
+            settings.setIndexId("ogc-statistics-index");
             settings.setTypeId("mytype");
 
             _INSTANCE.init(settings);

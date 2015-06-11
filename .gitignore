@@ -13,3 +13,6 @@ extensions/do/core/configuration.db
 **.*~
 statistics/data/
 webapp/src/main/webapp/META-INF/context.xml
+webapp/config.logger.fileappender.filepath_IS_UNDEFINED/config.logger.fileappender.filename_IS_UNDEFINED.log
+webapp/src/main/webapp/cache.tmp
+webapp/src/main/webapp/configuration.db

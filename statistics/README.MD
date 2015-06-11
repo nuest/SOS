@@ -24,26 +24,25 @@ The Elasticsearch client API automatically converts the map to a JSON string, in
 ## Setup
 
 - Checkout this branch.
-- Install ElasticSearch on your local machine. https://www.elastic.co/downloads/elasticsearch the 1.5.2 version
-- Open up the ElasticSearch config file under the config/elasticsearch.yml. Modify the clustername to 
-` cluster.name: embedded-cluster `
-- Install Kibana 4.X on your local machine. https://www.elastic.co/downloads/kibana
-- Run `maven clean install -DskipTests=true` from the SOS root project.
-- Run  `jetty:run` from the webapp module. If the port is already occupied, go to the webapp/pom.xml file and change it under the Jetty `<plugin>` section.
-- Goto localhost:8080 and set up your SOS deployments. 
-- Start elasticsearch with `bin/elasticsearch.bat` on windows 
-- Start kibana with `bin\kibana.bat` on windows
-- Import the SoupUI project to your soap workspace. The soap project is located in the statistics module src/test/resources/sopUI/SOSBulkRequests.xml
+- Install Elasticsearch on your local machine in version 1.6.x or later from https://www.elastic.co/downloads/elasticsearch
+- Open up the Elasticsearch config file under the ``config/elasticsearch.yml``. Modify the clustername to ``ogc-statistics-clluster``, i.e. ``cluster.name: ogc-statistics-cluster``
+- Install Kibana 4.x on your local machine from https://www.elastic.co/downloads/kibana
+- Run ``mvn clean install -DskipTests=true`` from the SOS root project.
+- Run ``mvn jetty:run`` from the webapp module. If the port is already occupied, open the file ``webapp/pom.xml`` and change it under the Jetty `<plugin>` section.
+- Goto http://localhost:8080 and set up your SOS deployment, i.e. configure a database. For testing, use "H2/GeoDB (in memory)". 
+- Start Elasticsearch with the appropriate executable in ``<Elasticsearch directory>/bin``, e.g. ``bin/elasticsearch.bat`` on Windows 
+- Start Kibana with the appropriate executable in ``<Kibana directory>/bin``, e.g. ``bin\kibana.bat`` on Windows, and open it at http://localhost:5601/
+- Import the [SoupUI](http://www.soapui.org/) project to your SoapUI workspace (File -> Import Project): ``<statics module>/src/test/resources/soapUI/SOSBulkRequests.xml``
 - Run the test cases from the SoupUI.
-- Set up the index in kibana the index name is now `myindex` and the timestamp field is `@timestamp`
+- Set up the index in Kibana, the default index name is ``ogc-statistics-clluster``and the timestamp field is ``@timestamp``
 
 ![Kibana set up index](https://wiki.52north.org/pub/Projects/GSoC2015Statistics4Ows/kibana-index-setup.JPG)
 
-- Head to the discover mode and check if you see any raw data there.
+- Head to the [discover mode](https://www.elastic.co/guide/en/kibana/current/discover.html) and check if you see any raw data there.
 
 ![Discover mode](https://wiki.52north.org/pub/Projects/GSoC2015Statistics4Ows/discover-mode.JPG)
 
-- with the default kibana settings setup click on the link to view the bar chart of the number of counts by request types this year.
+- With the default Kibana settings setup, click on the link below to view the bar chart of the number of counts by request types this year.
 
 ![Bar chart](https://wiki.52north.org/pub/Projects/GSoC2015Statistics4Ows/kibana-countoperations.JPG)
 
