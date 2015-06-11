@@ -63,9 +63,9 @@ public class RequestContext {
 
     private Optional<ProxyChain> proxyChain = Optional.absent();
 
-    private Optional<String> requestContentType = Optional.absent();
+    private Optional<String> contentType = Optional.absent();
 
-    private Optional<String> responseAcceptType = Optional.absent();
+    private Optional<String> acceptType = Optional.absent();
 
     public Optional<IPAddress> getIPAddress()
     {
@@ -112,30 +112,31 @@ public class RequestContext {
         this.token = Preconditions.checkNotNull(token);
     }
 
-    public Optional<String> getRequestContentType()
+    public Optional<String> getContentType()
     {
-        return requestContentType;
+        return contentType;
     }
 
-    public void setRequestContentType(String requestContentType)
+    public void setContentType(String contentType)
     {
-        this.requestContentType = Optional.fromNullable(requestContentType);
+        this.contentType = Optional.fromNullable(contentType);
     }
 
-    public Optional<String> getResponseAcceptType()
+    public Optional<String> getAcceptType()
     {
-        return responseAcceptType;
+        return acceptType;
     }
 
-    public void setResponseAcceptType(String responseAcceptType)
+    public void setAcceptType(String acceptType)
     {
-        this.responseAcceptType = Optional.fromNullable(responseAcceptType);
+        this.acceptType = Optional.fromNullable(acceptType);
     }
 
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).omitNullValues().add("address", getIPAddress().orNull()).add("token", getToken().orNull()).add("proxyChain", getForwardedForChain().orNull()).toString();
+        return Objects.toStringHelper(this).omitNullValues().add("address", getIPAddress().orNull()).add("token", getToken().orNull()).add("proxyChain", getForwardedForChain().orNull())
+                .add("contenType", getContentType().orNull()).add("acceptType", getAcceptType().orNull()).toString();
     }
 
     public static RequestContext fromRequest(HttpServletRequest req)
@@ -144,8 +145,8 @@ public class RequestContext {
         rc.setIPAddress(getIPAddress(req));
         rc.setForwaredForChain(ProxyChain.fromForwardedForHeader(req.getHeader(HTTPHeaders.X_FORWARDED_FOR)));
         rc.setToken(req.getHeader(HTTPHeaders.AUTHORIZATION));
-        rc.setRequestContentType(req.getHeader(HTTPHeaders.CONTENT_TYPE));
-        rc.setResponseAcceptType(req.getHeader(HTTPHeaders.ACCEPT_ENCODING));
+        rc.setContentType(req.getHeader(HTTPHeaders.CONTENT_TYPE));
+        rc.setAcceptType(req.getHeader(HTTPHeaders.ACCEPT_ENCODING));
         return rc;
 
     }
