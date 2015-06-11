@@ -1,15 +1,27 @@
-#Architectural overview
+# OGC Web Service Statistics Module for 52°North web services
 
-The SosStatisticsLoggerListener class receives the events from the SosEventBus. Currently only the RequestEvent are processed.
+## About
 
-The SosRequestLoggingResolver routes the Request object based on the event's request type to the proper XXXHandler classes. (e.g. GetCapabilitiesRequestHandler, DescribeSensorRequestHandler etc...)
+This module allows to capture usage statistics for OGC web services into a document database for interactive visualisation and long-term statistics of service and domain specific meta-information.
 
-In the XXXHandlers the data will be extracted from the Request object and a `Map<String,Object>` is given back containing the extracted informations.
+Project description: https://wiki.52north.org/bin/view/Projects/GSoC2015Statistics4Ows
 
-This `Map<String,Object>` is persisted to the ElasticSearch database. The ElasticSearch client API automatically converts the Objects to JSON strings. Even the 
-`Map<String,Map<String,Object>>` hierarchical embedded maps also.
+## Architectural overview
 
-#Setup
+
+The main entry point for collection of service statistics is the class ``org.n52.sos.statistics.sos.SosStatisticsLoggerListener``. It receives the events from the ``SosEventBus``.
+
+In the event listener, the events are distributed to different **resolver** classes (which implement ``org.n52.sos.statistics.api.interfaces.IStatisticsEventResolver``) based on the event's class. The resolver is provided with the required objects/information to distribute the processing of the event.
+
+For example, the ``SosRequestEventResolver``, is provided with the instances of classes extending ``AbstractServiceRequest``. Within the resolver, the different implementing classes are further distributed to **handlers**.
+
+In the handlers, the data is extracted from the provided objects and a `Map<String,Object>` is returned.
+
+This `Map<String,Object>` is persisted to the statistics database, which is based on Elasticsearch.
+
+The Elasticsearch client API automatically converts the map to a JSON string, including nested map objects, e.g. ``Map<String,Map<String,Object>>``.
+
+## Setup
 
 - Checkout this branch.
 - Install ElasticSearch on your local machine. https://www.elastic.co/downloads/elasticsearch the 1.5.2 version
