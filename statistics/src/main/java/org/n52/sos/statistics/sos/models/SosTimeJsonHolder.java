@@ -1,7 +1,6 @@
 package org.n52.sos.statistics.sos.models;
 
 import java.util.Map;
-import java.util.Objects;
 
 import org.joda.time.DateTime;
 import org.n52.sos.ogc.filter.TemporalFilter;
@@ -27,7 +26,9 @@ public class SosTimeJsonHolder extends AbstractElasticSearchDataHolder implement
 
     public static SosTimeJsonHolder convert(Time time)
     {
-        Objects.requireNonNull(time);
+        if (time == null) {
+            return null;
+        }
 
         SosTimeJsonHolder o = new SosTimeJsonHolder();
         if (time instanceof TimeInstant) {
