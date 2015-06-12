@@ -86,11 +86,19 @@ public class SosStatisticsLoggerListener implements SosEventListener {
 
                 executorService.execute(resolver);
             } else {
-                logger.error("Wrong type of event", sosEvent.getClass());
+                logger.trace("Unssupported type of event: {}", sosEvent.getClass());
+                // TODO add a "catch all" event resolvert that simply logs the name of the event and when it occured
             }
         } catch (Throwable e) {
-            logger.error("Can't run logging", e);
+            logger.error("Can't handle event for statistics logging: {}", sosEvent, e);
         }
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.executorService.shutdown();
+    }
+    
+    
 
 }
