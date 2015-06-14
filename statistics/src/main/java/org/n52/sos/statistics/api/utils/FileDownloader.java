@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 public class FileDownloader {
 
@@ -35,7 +35,7 @@ public class FileDownloader {
         FileUtils.copyURLToFile(fileUrl, out);
     }
 
-    public static void gunzipFile(String filePath) throws FileNotFoundException, IOException, CompressorException {
+    public static void gunzipFile(String filePath) throws IOException {
         File file = new File(filePath);
         String outPath = null;
         final byte[] buff = new byte[1024];
@@ -46,13 +46,20 @@ public class FileDownloader {
             outPath = file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 2);
         }
 
-        FileOutputStream out = new FileOutputStream(outPath);
-        GzipCompressorInputStream gzFile = new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(file)));
-        int n = 0;
-        while (-1 != (n = gzFile.read(buff))) {
-            out.write(buff, 0, n);
+        FileOutputStream out = null;
+        GzipCompressorInputStream gzFile = null;
+        try {
+            out = new FileOutputStream(outPath);
+            gzFile = new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(file)));
+            int n = 0;
+            while (-1 != (n = gzFile.read(buff))) {
+                out.write(buff, 0, n);
+            }
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(gzFile);
         }
-        out.close();
-        gzFile.close();
     }
 }
