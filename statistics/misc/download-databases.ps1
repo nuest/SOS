@@ -20,3 +20,5 @@ Write-Host "Expending databases to" $testfolder
 Expand-GZip -FullName $testfolder\$countryDbName 
 Expand-GZip -FullName $testfolder\$cityDbName 
 
+pause
+
